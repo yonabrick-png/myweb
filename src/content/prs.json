@@ -1,9 +1,41 @@
 {
   "$comment": "Yona's personal records. Every entry with placeholder: true shows a 'sample' tag on the page and a warning at build time. Replace time, race and date with real ones, then set placeholder to false. time is h:mm:ss or m:ss.",
   "prs": [
-    { "id": "5k", "label": "5K", "meters": 5000, "time": "19:45", "race": "Parkrun", "date": "2026-04", "placeholder": true },
-    { "id": "10k", "label": "10K", "meters": 10000, "time": "41:10", "race": "City 10K", "date": "2026-03", "placeholder": true },
-    { "id": "half", "label": "Half marathon", "meters": 21097.5, "time": "1:32:30", "race": "Spring Half", "date": "2025-11", "placeholder": true },
-    { "id": "marathon", "label": "Marathon", "meters": 42195, "time": "3:19:05", "race": "Autumn Marathon", "date": "2025-10", "placeholder": true }
+    {
+      "id": "1000m",
+      "label": "1000 m",
+      "meters": 1000,
+      "time": "3:20",
+      "race": "Club track meet",
+      "date": "2026-06",
+      "placeholder": true
+    },
+    {
+      "id": "1500m",
+      "label": "1500 m",
+      "meters": 1500,
+      "time": "5:12",
+      "race": "Club track meet",
+      "date": "2026-05",
+      "placeholder": true
+    },
+    {
+      "id": "2000m",
+      "label": "2000 m",
+      "meters": 2000,
+      "time": "7:05",
+      "race": "Club track meet",
+      "date": "2026-07",
+      "placeholder": true
+    },
+    {
+      "id": "5k",
+      "label": "5K",
+      "meters": 5000,
+      "time": "19:45",
+      "race": "Parkrun",
+      "date": "2026-04",
+      "placeholder": true
+    }
   ]
 }

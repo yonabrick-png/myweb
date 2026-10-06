@@ -1,15 +1,41 @@
 {
   "$comment": "The race chapter: one race drawn kilometre by kilometre. splits are per-km times (m:ss) and should add up to the PR time. Notes appear when the marker passes `at` (0..1). Set placeholder to false once the splits and notes are real.",
   "race": {
-    "name": "City 10K",
-    "prId": "10k",
+    "name": "Parkrun 5K",
+    "prId": "5k",
     "placeholder": true,
-    "splits": ["4:15", "4:10", "4:08", "4:09", "4:11", "4:07", "4:06", "4:05", "4:01", "3:58"]
+    "splits": [
+      "4:02",
+      "3:59",
+      "3:58",
+      "3:56",
+      "3:50"
+    ]
   },
   "notes": [
-    { "id": "r01", "at": 0, "title": "Start", "text": "Went out a little slower than goal pace on purpose. The first kilometre always feels too easy, and that's the trap." },
-    { "id": "r02", "at": 0.35, "title": "Settle", "text": "Found a group running my pace and tucked in. Nothing clever here, just even splits and steady breathing." },
-    { "id": "r03", "at": 0.6, "title": "Halfway and beyond", "text": "Through halfway on schedule. This is where it starts to hurt, and where the race is really decided." },
-    { "id": "r04", "at": 0.85, "title": "Negative split", "text": "The last two kilometres were the fastest of the day. Sub-four for the final one, everything left on the road." }
+    {
+      "id": "r01",
+      "at": 0,
+      "title": "Start",
+      "text": "Went out controlled on purpose. The first kilometre always feels too easy, and that's the trap."
+    },
+    {
+      "id": "r02",
+      "at": 0.3,
+      "title": "Settle",
+      "text": "Found a group running my pace and tucked in. Nothing clever here, just even splits and steady breathing."
+    },
+    {
+      "id": "r03",
+      "at": 0.55,
+      "title": "Halfway",
+      "text": "Through halfway on schedule. This is where a 5K starts to hurt, and where it is really decided."
+    },
+    {
+      "id": "r04",
+      "at": 0.8,
+      "title": "Last kilometre",
+      "text": "The final kilometre was the fastest of the day. Sub-3:55, everything left on the road."
+    }
   ]
 }

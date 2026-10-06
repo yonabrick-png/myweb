@@ -74,7 +74,7 @@ test('no JavaScript: the page reads as a document', async ({ browser }) => {
   expect(await page.getByRole('note').count()).toBe(5);
   expect(await page.locator('.pr').count()).toBe(4);
   await expect(page.locator('#pace-route')).toBeVisible();
-  expect(await page.locator('.pace .split').count()).toBe(10);
+  expect(await page.locator('.pace .split').count()).toBe(5);
   expect(await page.locator('.project a').count()).toBe(4);
   await expect(page.locator('.sources__list li').first()).toBeVisible();
   await page.screenshot({ path: 'screenshots/no-js.png', fullPage: true });
@@ -146,10 +146,10 @@ test('race: the pace line draws and the clock reaches the finish', async ({ page
   await page.screenshot({ path: `screenshots/${info.project.name}-race-mid.png` });
   await jump(page, (await at(1)) + 2);
   await settle(page, 800);
-  await expect(page.locator('#ro-km')).toHaveText('10.0');
+  await expect(page.locator('#ro-km')).toHaveText('5.0');
   const total = await page.locator('.pace').getAttribute('data-splits');
   const sum = total!.split(',').map(Number).reduce((a, b) => a + b, 0);
   const clock = `${Math.floor(sum / 60)}:${String(sum % 60).padStart(2, '0')}`;
   await expect(page.locator('#ro-clock')).toHaveText(clock);
-  expect(await page.locator('.pace .split.is-passed').count()).toBe(10);
+  expect(await page.locator('.pace .split.is-passed').count()).toBe(5);
 });
