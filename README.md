@@ -1,0 +1,32 @@
+# Yona
+
+A single-page, scroll-driven personal site: Yona's running and the other things Yona builds. Scroll progress is distance. A 3D 400 m track sits behind the page, the camera follows a runner round one lap of lane 1 while short notes pop up beside the track, and then the page moves on to personal records, a pace chart of the best race that draws itself as you scroll, and links to other projects.
+
+It is a sister site to [Flamme Rouge](https://github.com/yonabrick-png/Cycling-website) and uses the same stack and effects: Vite + TypeScript, three.js, anime.js 4 (`onScroll`, `createDrawable`, `createMotionPath`, `scrambleText`, `splitText`), and Lenis.
+
+```sh
+npm install
+npm run dev            # http://localhost:5173
+npm run build          # content check + typecheck + production build
+npm run test:e2e       # Playwright: screenshots, fallbacks, perf budget (needs `npm run build` first)
+npm run build:artifact # one self-contained HTML file in dist-artifact/ for embedded viewers
+```
+
+Useful query strings: `?mode=text` (plain document), `?quality=low|high` (force a quality tier).
+
+## Editing the content
+
+Everything on the page comes from `src/content/*.json` and is written into the HTML at build time, so the site reads fully with JavaScript off.
+
+| File | What it holds |
+|---|---|
+| `bubbles.json` | The five notes that pop up during the lap. `status: personal` is your own words: rewrite freely. Max 35 words each. |
+| `prs.json` | Personal records: distance, time (`m:ss` or `h:mm:ss`), race, month. Pace per km is worked out for you. |
+| `race.json` | The best race: per-km splits (they must add up to that PR's time) and four notes placed along the race (`at` 0..1). |
+| `projects.json` | Project cards: name, one line, tags, link. |
+
+**The PR times, race splits and race notes are placeholders.** Entries with `"placeholder": true` show a yellow *Sample* tag on the page and a warning at build time. Put in your real numbers and set `placeholder` to `false`.
+
+The project links point at GitHub repos. Skyline Capital, Flamme Rouge and Online Orders API are private, so visitors get a 404 there: swap in a live URL or make the repo public.
+
+`npm run build` fails on an unsourced track fact, a note over 35 words, overlapping note ranges, a time that doesn't parse, or splits that don't add up.

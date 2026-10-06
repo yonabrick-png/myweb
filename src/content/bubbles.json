@@ -1,0 +1,75 @@
+{
+  "$comment": "Callouts over the 3D track. `status: personal` is Yona's own words: rewrite freely. Facts about the track carry a source. scrollRange is in vh from the top of #track and is matched against the centre of the viewport, so a range sits 50vh after the camera hold it belongs to (see SCHEDULE in src/track/world.ts). Ranges must be >= 60vh and must not overlap.",
+  "bubbles": [
+    {
+      "id": "b01",
+      "chapter": "track",
+      "part": "Start line",
+      "scrollRange": {
+        "from": 135,
+        "to": 200
+      },
+      "anchor": "start",
+      "text": "Hi, I'm Yona. I run, and I build things for the web. This page is one lap of a track, so keep scrolling and run it with me.",
+      "sourceUrl": "",
+      "retrievedOn": "",
+      "status": "personal"
+    },
+    {
+      "id": "b02",
+      "chapter": "track",
+      "part": "Lane 1",
+      "scrollRange": {
+        "from": 230,
+        "to": 290
+      },
+      "anchor": "runner",
+      "text": "That's me in lane 1. I run for the quiet, for the stubborn joy of a hard session, and for the number on the watch at the end.",
+      "sourceUrl": "",
+      "retrievedOn": "",
+      "status": "personal"
+    },
+    {
+      "id": "b03",
+      "chapter": "track",
+      "part": "Back straight",
+      "scrollRange": {
+        "from": 320,
+        "to": 380
+      },
+      "anchor": "back",
+      "text": "A standard track is two 84.39 m straights joined by two bends with a 36.5 m radius. Once round lane 1 is 400 m.",
+      "sourceUrl": "https://dlgsc.wa.gov.au/sport-and-recreation/sports-dimensions-guide/athletics-track-events",
+      "retrievedOn": "2026-10-06",
+      "status": "verified-search"
+    },
+    {
+      "id": "b04",
+      "chapter": "track",
+      "part": "The bend",
+      "scrollRange": {
+        "from": 410,
+        "to": 470
+      },
+      "anchor": "bend",
+      "text": "Most tracks have eight lanes, each 1.22 m wide. Outer lanes are longer round the bends, which is why a 400 m race starts staggered.",
+      "sourceUrl": "https://dlgsc.wa.gov.au/sport-and-recreation/sports-dimensions-guide/athletics-track-events",
+      "retrievedOn": "2026-10-06",
+      "status": "verified-search"
+    },
+    {
+      "id": "b05",
+      "chapter": "track",
+      "part": "Home straight",
+      "scrollRange": {
+        "from": 500,
+        "to": 562
+      },
+      "anchor": "home",
+      "text": "Past the line you'll find my personal records, the race I'm proudest of, and the other projects I've built.",
+      "sourceUrl": "",
+      "retrievedOn": "",
+      "status": "personal"
+    }
+  ]
+}

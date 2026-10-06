@@ -1,0 +1,55 @@
+{
+  "$comment": "Other things Yona has built. url is where the card links; private GitHub repos 404 for visitors, so swap in a live demo URL where there is one.",
+  "projects": [
+    {
+      "id": "flamme-rouge",
+      "name": "Flamme Rouge",
+      "kind": "Website",
+      "text": "A cycling site you scroll like a stage race: a procedural race bike the camera orbits part by part, six legends, and Alpe d'Huez drawn as you climb.",
+      "tags": [
+        "three.js",
+        "anime.js",
+        "Vite"
+      ],
+      "url": "https://github.com/yonabrick-png/Cycling-website",
+      "status": "Sep 2026"
+    },
+    {
+      "id": "skyline-capital",
+      "name": "Skyline Capital",
+      "kind": "Game",
+      "text": "A browser 3D tycoon. Start with a food cart in a generated city, trade on a simulated stock market, take your company public and climb a world rich list.",
+      "tags": [
+        "React",
+        "three.js",
+        "Simulation"
+      ],
+      "url": "https://github.com/yonabrick-png/skyline-capital",
+      "status": "v1"
+    },
+    {
+      "id": "online-orders-api",
+      "name": "Online Orders API",
+      "kind": "Backend",
+      "text": "An API for taking and tracking online orders. Just getting started.",
+      "tags": [
+        "API"
+      ],
+      "url": "https://github.com/yonabrick-png/Online-ordes-API",
+      "status": "In progress"
+    },
+    {
+      "id": "yona",
+      "name": "This site",
+      "kind": "Website",
+      "text": "The page you're on: a 400 m track in three.js, one lap per scroll, with my running inside it.",
+      "tags": [
+        "three.js",
+        "anime.js",
+        "Vite"
+      ],
+      "url": "https://github.com/yonabrick-png/myweb",
+      "status": "Oct 2026"
+    }
+  ]
+}

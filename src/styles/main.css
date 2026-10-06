@@ -1,0 +1,657 @@
+@import '@fontsource/barlow/400.css';
+@import '@fontsource/barlow/500.css';
+@import '@fontsource/barlow/800-italic.css';
+@import '@fontsource-variable/jetbrains-mono';
+
+/*
+  Layout: one fixed 3D stage; copy hugs the left edge; a thin instrument bar across the top
+  reads out marathon distance in mono. Single dark look by design: ink, paper, one track-tartan
+  orange. Sister site to Flamme Rouge (same type, same instruments), different surface.
+*/
+:root {
+  --ink: #0f1012;
+  --ink-2: #17191c;
+  --line: #2a2d32;
+  --paper: #f2f2f0;
+  --dim: #8d9097;
+  --tartan: #ff6a3d;
+  --tartan-deep: #7d3019;
+  /* Tartan dark enough for text on paper (bubbles). */
+  --tartan-ink: #a8381a;
+
+  --accent: var(--tartan);
+
+  --font-display: 'Barlow', 'Arial Narrow', 'Helvetica Neue', sans-serif;
+  --font-body: 'Barlow', 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  --gutter: clamp(16px, 5vw, 72px);
+  --bar-h: 52px;
+  --ease-out-quint: cubic-bezier(0.23, 1, 0.32, 1);
+
+  color-scheme: dark;
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* ---------- Base ---------- */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html {
+  font-family: var(--font-body);
+  font-size: 100%;
+  line-height: 1.55;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-body);
+  font-size: 1.125rem;
+  font-weight: 400;
+  overflow-x: hidden;
+}
+
+a { color: inherit; text-underline-offset: 0.2em; }
+
+:focus-visible {
+  outline: 2px solid var(--tartan);
+  outline-offset: 3px;
+}
+
+.display {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-style: italic;
+  line-height: 0.86;
+  letter-spacing: -0.035em;
+  margin: 0 0 0.3em;
+  font-size: clamp(3.25rem, 11vw, 9.5rem);
+  text-wrap: balance;
+}
+
+.chapter--track .display { font-size: clamp(4rem, 13vw, 12.5rem); }
+.hero { max-width: 40rem; }
+
+/* Three lane lines, slanted like the headline, set before the title. */
+.lanes {
+  display: flex;
+  gap: 7px;
+  margin-bottom: 0.6em;
+}
+.lanes i {
+  display: block;
+  width: clamp(28px, 3.4vw, 52px);
+  height: 7px;
+  background: var(--tartan);
+  transform: skewX(-18deg);
+}
+.lanes i:nth-child(2) { opacity: 0.6; }
+.lanes i:nth-child(3) { opacity: 0.3; }
+
+/* The finish tape, stretched across before the last headline. */
+.tape {
+  display: block;
+  width: min(100%, 28rem);
+  height: 6px;
+  margin-bottom: 0.9em;
+  background: repeating-linear-gradient(90deg, var(--paper) 0 18px, var(--tartan) 18px 36px);
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin: 0 0 1.2rem;
+}
+.label b { color: var(--tartan); font-weight: 600; }
+
+/* ---------- Instrument bar ---------- */
+.bar {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-height: var(--bar-h);
+  padding: env(safe-area-inset-top, 0px) var(--gutter) 0;
+  background: color-mix(in srgb, var(--ink) 82%, transparent);
+  border-bottom: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.bar__mark {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  color: var(--paper);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.bar__mark::before {
+  content: '';
+  width: 16px;
+  height: 10px;
+  background: linear-gradient(var(--tartan) 0 3px, transparent 3px 7px, var(--tartan) 7px);
+  transform: skewX(-18deg);
+}
+.mode-link {
+  margin-left: auto;
+  color: var(--dim);
+  white-space: nowrap;
+}
+
+/* Km readout: the page is a marathon. Shown only when the scene runs. */
+.km {
+  display: none;
+  align-items: center;
+  gap: 12px;
+  color: var(--paper);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.km__num { font-weight: 600; min-width: 5ch; text-align: right; }
+.km__unit { color: var(--dim); }
+/* Stepped progress: ten blocks light up from dark to full tartan as the race is covered. */
+.km__steps { display: flex; gap: 2px; }
+.km__steps i {
+  display: block;
+  width: 7px;
+  height: 12px;
+  background: var(--line);
+}
+.km__steps i.on { background: var(--tartan-deep); }
+.km__steps i.on:nth-last-child(-n + 3) { background: var(--tartan); }
+
+/* ---------- Chapters: text layout (default, no JS / no WebGL / reduced motion) ---------- */
+main { position: relative; z-index: 2; }
+
+.chapter {
+  position: relative;
+  min-height: 100vh;
+  padding: calc(var(--bar-h) + 14vh) var(--gutter) 12vh;
+  border-top: 1px solid var(--line);
+}
+.chapter:first-of-type { border-top: 0; }
+
+.chapter__copy { max-width: 36rem; }
+.chapter__copy p {
+  max-width: 60ch;
+  margin: 0 0 1em;
+  color: color-mix(in srgb, var(--paper) 88%, var(--dim));
+}
+.lede { font-size: 1.3rem; font-weight: 500; color: var(--paper) !important; }
+
+.chapter--finish .chapter__copy { max-width: 44rem; }
+
+/* ---------- Bubbles: paper plates with a tartan notch ---------- */
+.bubbles {
+  display: grid;
+  gap: 28px;
+  margin-top: 48px;
+  max-width: 34rem;
+}
+
+.bubble {
+  margin: 0;
+  font-size: 1.125rem;
+  line-height: 1.45;
+}
+
+.bubble__plate {
+  position: relative;
+  display: block;
+  max-width: 34ch;
+  padding: 12px 18px 16px;
+  background: var(--paper);
+  color: var(--ink);
+  border-left: 4px solid var(--tartan);
+  /* One hard corner, bottom left, where the notch tail sits. */
+  border-radius: 0 10px 10px 0;
+}
+
+.bubble__tag {
+  display: block;
+  margin-bottom: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tartan-ink);
+}
+
+.bubble__plate::after {
+  content: '';
+  position: absolute;
+  left: -4px;
+  bottom: -14px;
+  width: 16px;
+  height: 14px;
+  background: var(--tartan);
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+
+.text-only { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--dim); margin: 0; }
+.bubbles-float .text-only { display: none; }
+
+.ref {
+  font-family: var(--font-mono);
+  font-size: 0.72em;
+  color: var(--dim);
+  margin-left: 0.2em;
+  white-space: nowrap;
+  text-decoration: none;
+}
+.bubble .ref { color: #55585e; }
+
+.bubble__ref {
+  font-family: var(--font-mono);
+  font-size: 0.75em;
+  color: #55585e;
+  margin-left: 0.25em;
+  white-space: nowrap;
+}
+
+/* ---------- Sources ---------- */
+.sources { margin-top: 12vh; max-width: 64ch; }
+.sources h3 { margin: 0 0 1rem; }
+.sources__list {
+  padding-left: 1.6em;
+  color: var(--dim);
+  font-size: 0.95rem;
+}
+.sources__list li { margin-bottom: 0.6em; }
+.sources__list li::marker { font-family: var(--font-mono); color: var(--tartan); }
+
+/* ---------- 3D-only layers ---------- */
+#scene,
+#leaders { display: none; }
+
+/* ---------- 3D mode ---------- */
+.mode-3d .km { display: flex; }
+
+.mode-3d #scene {
+  display: block;
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+}
+
+/* Scrim so the copy stays readable over the brightest part of the scene. */
+.mode-3d body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgb(15 16 18 / 0.82) 0%, rgb(15 16 18 / 0.4) 36%, transparent 60%);
+}
+
+.mode-3d .chapter { border-top: 0; }
+.mode-3d .chapter__copy { text-shadow: 0 1px 16px rgb(15 16 18 / 0.7); }
+
+/* Scroll length of the track chapter. Bubble ranges in bubbles.json and the camera schedule in
+   src/track/world.ts are measured against this height. */
+.mode-scroll .chapter--track { height: 640vh; }
+
+/* Floating bubbles: the same elements, lifted out of the flow and placed on their 3D anchors. */
+.bubbles-float .chapter--track .bubbles {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  max-width: none;
+  display: block;
+  pointer-events: none;
+}
+
+.bubbles-float .bubble {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 4;
+  will-change: transform;
+}
+
+.bubbles-float .bubble__plate {
+  opacity: 0;
+  pointer-events: none;
+}
+.bubbles-float .bubble.is-active .bubble__plate { pointer-events: auto; }
+.bubbles-float .bubble:focus-within .bubble__plate { opacity: 1 !important; transform: none !important; }
+
+.bubble-range {
+  position: absolute;
+  left: 0;
+  width: 1px;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.mode-3d #leaders {
+  display: block;
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 3;
+  pointer-events: none;
+  overflow: visible;
+}
+#leaders line {
+  stroke: var(--paper);
+  stroke-width: 1;
+  stroke-dasharray: 2 4;
+  opacity: 0;
+}
+
+/* Poster mode (reduced motion): the scene shows one still frame per chapter. */
+.mode-poster #scene { transition: opacity 500ms linear; }
+.mode-poster #scene.is-swapping { opacity: 0; }
+
+@media (max-width: 720px) {
+  body { font-size: 1rem; }
+  .bubble { font-size: 1rem; }
+  .km__unit,
+  .km__steps { display: none; }
+  .mode-link { font-size: 0.6875rem; }
+  .mode-3d body::before {
+    background: linear-gradient(180deg, rgb(15 16 18 / 0.8) 0%, rgb(15 16 18 / 0.25) 45%, transparent 70%);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .mode-link:hover,
+  .sources__list a:hover { color: var(--tartan); }
+}
+
+.links a { color: var(--paper); font-family: var(--font-mono); font-size: 0.95rem; }
+
+/* "Sample": content that is still a placeholder in src/content/*.json. Loud on purpose. */
+.sample {
+  display: inline-block;
+  margin-left: 0.6em;
+  padding: 2px 6px;
+  border: 1px dashed currentColor;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  vertical-align: middle;
+  color: #f5c84c;
+}
+
+/* ---------- Personal records ---------- */
+.prs {
+  list-style: none;
+  margin: 8vh 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+  border-top: 1px solid var(--line);
+  border-left: 1px solid var(--line);
+}
+.pr {
+  min-width: 0;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.pr article {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  height: 100%;
+  padding: 26px 26px 28px;
+  position: relative;
+}
+.pr__label {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--tartan);
+}
+.pr__time {
+  margin: 0;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 800;
+  font-size: clamp(3.4rem, 6vw, 4.6rem);
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+.pr__meta {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 6px 0 0;
+  padding: 14px 0 0;
+  border-top: 1px solid var(--line);
+}
+.pr__meta div { display: flex; flex-direction: column-reverse; justify-content: flex-end; gap: 4px; min-width: 0; }
+.pr__meta dt {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+.pr__meta dd { margin: 0; font-size: 0.98rem; font-weight: 500; overflow-wrap: anywhere; }
+.pr__meta dd small { color: var(--dim); font-size: 0.8em; margin-left: 1px; }
+.prs-live .pr { opacity: 0; }
+
+@media (hover: hover) and (pointer: fine) {
+  .pr article::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 1px solid var(--tartan);
+    opacity: 0;
+    transition: opacity 180ms ease;
+    pointer-events: none;
+  }
+  .pr:hover article::after { opacity: 1; }
+}
+
+/* ---------- Best race: the pace chart ---------- */
+.race__track { margin-top: 6vh; }
+.race__pin {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: clamp(24px, 4vw, 64px);
+  align-items: center;
+}
+.race__chart { min-width: 0; }
+.pace { display: block; width: 100%; height: auto; overflow: visible; }
+.pace text { font-family: var(--font-mono); font-size: 12px; fill: var(--dim); }
+.pace__grid line { stroke: #1e2125; stroke-width: 1; }
+.pace__grid line.is-major { stroke: #2b2e33; }
+.pace__kms line { stroke: #191b1f; stroke-width: 1; }
+.pace__avg { stroke: var(--dim); stroke-width: 1; stroke-dasharray: 3 5; }
+.pace__avg-label { fill: var(--dim); }
+.pace__base { fill: none; stroke: #33363c; stroke-width: 3; stroke-linecap: round; }
+.pace__line { fill: none; stroke: var(--tartan); stroke-width: 4; stroke-linecap: round; }
+.pace__splits circle { fill: var(--ink); stroke: #5c6068; stroke-width: 1.5; }
+.pace__splits text { font-size: 11px; }
+.pace__runner { display: none; }
+.pace__runner circle { fill: rgb(255 106 61 / 0.18); stroke: var(--tartan); stroke-width: 1.5; }
+.pace__runner path { fill: var(--paper); }
+
+.race__side { display: grid; gap: 28px; min-width: 0; }
+.readout {
+  display: flex;
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+.readout > div {
+  flex: 1;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 14px 16px;
+  background: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.readout__k {
+  width: 100%;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+.readout__v {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 800;
+  font-size: 2.4rem;
+  line-height: 0.9;
+}
+.readout > div:first-child .readout__v { color: var(--tartan); }
+.readout__of { font-family: var(--font-mono); font-size: 0.8rem; color: var(--dim); }
+/* The readout only means something while the race is ridden; the static chart says it all. */
+html:not(.race-live) .readout { display: none; }
+
+.notes { list-style: none; margin: 0; padding: 0; display: grid; gap: 22px; }
+.note h3 {
+  margin: 0 0 6px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tartan);
+}
+.note p { margin: 0; font-size: 1.02rem; max-width: 52ch; }
+
+/* Live race (scroll mode): the chart pins while the race is run; notes step forward one by one. */
+.race-live .race__track { height: 380vh; }
+.race-live .race__pin {
+  position: sticky;
+  top: var(--bar-h);
+  height: calc(100vh - var(--bar-h));
+  padding-block: 3vh;
+}
+.race-live .pace__runner { display: inline; }
+.race-live .pace__splits .split text { opacity: 0; transition: opacity 250ms ease; }
+.race-live .pace__splits .split.is-passed circle { fill: var(--tartan); stroke: var(--tartan); }
+.race-live .pace__splits .split.is-passed text { opacity: 1; fill: var(--paper); }
+.race-live .note {
+  opacity: 0.28;
+  transition: opacity 400ms var(--ease-out-quint);
+}
+.race-live .note.is-past { opacity: 0.5; }
+.race-live .note.is-current { opacity: 1; }
+
+@media (max-width: 860px) {
+  .race__pin { grid-template-columns: minmax(0, 1fr); }
+  .race-live .race__pin { grid-template-rows: auto auto; align-content: center; gap: 18px; }
+  .race-live .race__side { gap: 14px; }
+  /* On small screens only the current note is shown, under the chart. */
+  .race-live .note:not(.is-current) { display: none; }
+  .readout__v { font-size: 1.8rem; }
+  .readout > div { padding: 10px 12px; }
+  /* The chart scales down a lot on a phone; keep its labels legible. */
+  .pace text { font-size: 22px; }
+  .pace__splits text { font-size: 20px; }
+}
+
+/* ---------- Projects ---------- */
+.projects {
+  list-style: none;
+  margin: 8vh 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+  gap: 0;
+  border-top: 1px solid var(--line);
+  border-left: 1px solid var(--line);
+}
+.project { min-width: 0; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.project a {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  height: 100%;
+  padding: 26px 26px 30px;
+  color: inherit;
+  text-decoration: none;
+}
+.project__kind {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--tartan);
+}
+.project__status { color: var(--dim); font-weight: 500; margin-left: 0.6em; }
+.project__name {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 800;
+  font-size: clamp(2rem, 3vw, 2.6rem);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+}
+.project__text { font-size: 1rem; color: color-mix(in srgb, var(--paper) 82%, var(--dim)); max-width: 46ch; }
+.project__tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.project__tags span {
+  padding: 3px 8px;
+  border: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--dim);
+}
+/* A short lane line in the corner that runs out on hover. */
+.project__go {
+  position: absolute;
+  top: 30px;
+  right: 26px;
+  width: 22px;
+  height: 4px;
+  background: var(--tartan);
+  transform: skewX(-18deg);
+  transform-origin: left center;
+}
+.projects-live .project { opacity: 0; }
+
+@media (hover: hover) and (pointer: fine) {
+  .project a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 1px solid var(--tartan);
+    opacity: 0;
+    transition: opacity 180ms ease;
+    pointer-events: none;
+  }
+  .project a:hover::after { opacity: 1; }
+  .project__go { transition: transform 240ms var(--ease-out-quint); }
+  .project a:hover .project__go { transform: skewX(-18deg) scaleX(1.8); }
+  .links a:hover { color: var(--tartan); }
+}
+
+.sources .label { margin-bottom: 1rem; }
+.sources__list li span { color: #62656b; }

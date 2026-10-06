@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Yona</title>
+    <meta name="description" content="Yona: runner and builder. One lap of a track, my personal records, the race I'm proudest of, and the other things I've made." />
+    <meta name="theme-color" content="#0f1012" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/src/styles/main.css" />
+    <script>
+      // Runs before first paint so the right layout is chosen without a flash.
+      (function () {
+        var d = document.documentElement;
+        d.classList.remove('no-js');
+        d.classList.add('js');
+        var q = new URLSearchParams(location.search);
+        var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var asText = q.get('mode') === 'text';
+        try { asText = asText || sessionStorage.getItem('yona-mode') === 'text'; } catch (e) {}
+        if (asText) d.dataset.textChosen = '1';
+        if (asText || !window.WebGL2RenderingContext) return;
+        d.classList.add('mode-3d', reduce ? 'mode-poster' : 'mode-scroll');
+      })();
+    </script>
+    <script type="module" src="/src/main.ts"></script>
+  </head>
+  <body>
+    <header class="bar">
+      <a class="bar__mark" href="#track">Yona</a>
+      <div class="km" aria-hidden="true">
+        <span class="km__num" id="km-num">42.2</span>
+        <span class="km__unit">km to go</span>
+        <span class="km__steps" id="km-steps"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+      </div>
+      <a class="mode-link" id="mode-link" href="?mode=text">Read the page as text</a>
+    </header>
+
+    <canvas id="scene" aria-hidden="true"></canvas>
+    <svg id="leaders" aria-hidden="true" focusable="false"></svg>
+
+    <main>
+      <section id="track" class="chapter chapter--track" aria-labelledby="h-track">
+        <div class="chapter__copy hero">
+          <p class="label"><b>On your marks</b></p>
+          <span class="lanes" aria-hidden="true"><i></i><i></i><i></i></span>
+          <h1 id="h-track" class="display">Yona</h1>
+          <p class="lede">
+            Runner, and builder of things for the web. Scroll to run one lap with me, then see my
+            personal records, the race I'm proudest of, and what else I've made.
+          </p>
+        </div>
+        <div class="bubbles">
+          <h2 class="text-only">One lap</h2>
+          <!--bubbles-->
+        </div>
+      </section>
+
+      <section id="prs" class="chapter chapter--prs" aria-labelledby="h-prs">
+        <div class="chapter__copy">
+          <p class="label"><b>Personal records</b></p>
+          <h2 id="h-prs" class="display">Fastest so far</h2>
+          <p>My best time at each distance I race. Every one of them is there to be beaten.</p>
+        </div>
+        <ul class="prs"><!--prs--></ul>
+      </section>
+
+      <section id="race" class="chapter chapter--race" aria-labelledby="h-race">
+        <div class="chapter__copy">
+          <p class="label"><b>Best race</b></p>
+          <h2 id="h-race" class="display"><!--race-name--></h2>
+          <p>
+            <!--race-time--> for <!--race-km--> km, <!--race-avg--> per kilometre on average. Keep
+            scrolling to run it kilometre by kilometre: higher on the chart is faster.
+          </p>
+        </div>
+        <div class="race__track">
+          <div class="race__pin">
+            <div class="race__chart"><!--race-chart--></div>
+            <div class="race__side">
+              <div class="readout" aria-hidden="true">
+                <div><span class="readout__k">Km</span><span class="readout__v" id="ro-km">0.0</span><span class="readout__of">/ <!--race-km--></span></div>
+                <div><span class="readout__k">Split</span><span class="readout__v" id="ro-split">–</span></div>
+                <div><span class="readout__k">Clock</span><span class="readout__v" id="ro-clock">0:00</span></div>
+              </div>
+              <ol class="notes"><!--race-notes--></ol>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="projects" class="chapter chapter--projects" aria-labelledby="h-projects">
+        <div class="chapter__copy">
+          <p class="label"><b>Off the track</b></p>
+          <h2 id="h-projects" class="display">Other things I've built</h2>
+          <p>When I'm not running, I'm making things for the browser. A few of them:</p>
+        </div>
+        <ul class="projects"><!--projects--></ul>
+      </section>
+
+      <section id="finish" class="chapter chapter--finish" aria-labelledby="h-finish">
+        <div class="chapter__copy">
+          <p class="label"><b>Finish</b></p>
+          <span class="tape" aria-hidden="true"></span>
+          <h2 id="h-finish" class="display">That's the lap</h2>
+          <p>
+            Thanks for running it with me. If you want to talk running or code, find me on GitHub.
+          </p>
+          <p class="links">
+            <a href="https://github.com/yonabrick-png" rel="noopener">github.com/yonabrick-png</a>
+          </p>
+        </div>
+        <section class="sources" aria-labelledby="h-sources">
+          <h3 id="h-sources" class="label"><b>Sources</b></h3>
+          <ol class="sources__list"><!--sources--></ol>
+        </section>
+      </section>
+    </main>
+  </body>
+</html>
