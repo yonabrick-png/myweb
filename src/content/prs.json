@@ -1,32 +1,32 @@
 {
-  "$comment": "Yona's personal records. Every entry with placeholder: true shows a 'sample' tag on the page and a warning at build time. Replace time, race and date with real ones, then set placeholder to false. time is h:mm:ss or m:ss.",
+  "$comment": "Yona's personal records. time is h:mm:ss or m:ss. race and date are optional: leave them empty and the card shows just the time and pace. Entries with placeholder: true show a 'sample' tag on the page and a warning at build time.",
   "prs": [
     {
       "id": "1000m",
       "label": "1000 m",
       "meters": 1000,
-      "time": "3:20",
-      "race": "Club track meet",
-      "date": "2026-06",
-      "placeholder": true
+      "time": "3:06",
+      "race": "",
+      "date": "",
+      "placeholder": false
     },
     {
       "id": "1500m",
       "label": "1500 m",
       "meters": 1500,
-      "time": "5:12",
-      "race": "Club track meet",
-      "date": "2026-05",
-      "placeholder": true
+      "time": "4:44",
+      "race": "",
+      "date": "",
+      "placeholder": false
     },
     {
       "id": "2000m",
       "label": "2000 m",
       "meters": 2000,
-      "time": "7:05",
-      "race": "Club track meet",
-      "date": "2026-07",
-      "placeholder": true
+      "time": "6:50",
+      "race": "",
+      "date": "",
+      "placeholder": false
     },
     {
       "id": "5k",

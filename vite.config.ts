@@ -16,8 +16,8 @@ interface PR {
   label: string;
   meters: number;
   time: string;
-  race: string;
-  date: string;
+  race?: string;
+  date?: string;
   placeholder?: boolean;
 }
 interface Race {
@@ -103,8 +103,8 @@ function contentInHtml(): Plugin {
           `<p class="pr__time"><time datetime="PT${Math.round(sec)}S">${digits(p.time)}</time></p>` +
           `<dl class="pr__meta">` +
           `<div><dt>Pace</dt><dd>${digits(pacePerKm(sec, p.meters))}<small>/km</small></dd></div>` +
-          `<div><dt>Race</dt><dd>${esc(p.race)}</dd></div>` +
-          `<div><dt>When</dt><dd>${esc(monthYear(p.date))}</dd></div>` +
+          (p.race ? `<div><dt>Race</dt><dd>${esc(p.race)}</dd></div>` : '') +
+          (p.date ? `<div><dt>When</dt><dd>${esc(monthYear(p.date))}</dd></div>` : '') +
           `</dl></article></li>`
         );
       };
