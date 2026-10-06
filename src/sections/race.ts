@@ -12,7 +12,7 @@ const clock = (sec: number) => {
 /**
  * The race, kilometre by kilometre: the pace line draws itself (createDrawable) and a marker rides
  * it (createMotionPath), both synced to scroll across a pinned track. Splits passed light up, the
- * readout shows distance, the current split and the race clock, and the note for the current
+ * readout shows distance, the current split and the race clock (ending on the official time), and the note for the current
  * stretch is brought forward. Without scroll mode the full chart is shown with every note readable.
  */
 export function setupRace(mode: Mode) {
@@ -25,6 +25,10 @@ export function setupRace(mode: Mode) {
   document.documentElement.classList.add('race-live');
   const splits = (svg.dataset.splits ?? '').split(',').map(Number);
   const n = splits.length;
+  // Watch splits can add up to a few seconds off the official time; scale the clock so the finish
+  // reads the official time while each kilometre keeps its recorded share.
+  const splitSum = splits.reduce((a, b) => a + b, 0);
+  const scale = Number(svg.dataset.total) / splitSum || 1;
   const splitEls = [...svg.querySelectorAll<SVGGElement>('.split')].map((el) => ({ el, f: Number(el.dataset.f) }));
   const notes = [...document.querySelectorAll<HTMLElement>('.race__side .note')].map((el) => ({ el, at: Number(el.dataset.at) }));
   const kmOut = document.getElementById('ro-km')!;
@@ -53,7 +57,7 @@ export function setupRace(mode: Mode) {
       let sec = 0;
       for (let i = 0; i < k; i++) sec += splits[i];
       sec += (km - k) * splits[k];
-      clockOut.textContent = clock(sec);
+      clockOut.textContent = clock(Math.round(sec * scale * 1000) / 1000);
       if (k !== lastK) {
         lastK = k;
         splitOut.textContent = clock(splits[k]);

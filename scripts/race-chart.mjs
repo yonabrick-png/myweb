@@ -8,13 +8,17 @@ const W = 720;
 const H = 440;
 const PAD = { l: 64, r: 24, t: 28, b: 48 };
 
-export function raceChart(race) {
+/**
+ * `officialSec` is the official finish time. Watch splits often add up to a few seconds more or less
+ * (auto-lap, rounding), so the total and average use the official time when there is one.
+ */
+export function raceChart(race, officialSec) {
   const secs = race.splits.map(toSec);
   const n = secs.length;
   const fast = Math.min(...secs);
   const slow = Math.max(...secs);
-  const lo = Math.floor((fast - 6) / 5) * 5;
-  const hi = Math.ceil((slow + 6) / 5) * 5;
+  const lo = Math.floor((fast - 3) / 5) * 5;
+  const hi = Math.ceil((slow + 3) / 5) * 5;
   const x = (km) => PAD.l + (km / n) * (W - PAD.l - PAD.r);
   const y = (s) => PAD.t + ((s - lo) / (hi - lo)) * (H - PAD.t - PAD.b);
 
@@ -30,12 +34,14 @@ export function raceChart(race) {
     d += ` C ${c1[0].toFixed(1)} ${c1[1].toFixed(1)}, ${c2[0].toFixed(1)} ${c2[1].toFixed(1)}, ${p2[0].toFixed(1)} ${p2[1].toFixed(1)}`;
   }
 
-  const total = secs.reduce((a, b) => a + b, 0);
+  const total = officialSec ?? secs.reduce((a, b) => a + b, 0);
   const avg = total / n;
 
   let grid = '';
+  // Label every 5 s on a tight race, every 15 s on a wider one.
+  const every = hi - lo <= 30 ? 5 : 15;
   for (let s = lo; s <= hi; s += 5) {
-    const major = s % 15 === 0;
+    const major = s % every === 0;
     grid += `<line x1="${PAD.l}" x2="${W - PAD.r}" y1="${y(s).toFixed(1)}" y2="${y(s).toFixed(1)}" class="${major ? 'is-major' : ''}"/>`;
     if (major) grid += `<text x="${PAD.l - 12}" y="${(y(s) + 4).toFixed(1)}" text-anchor="end">${fmt(s)}</text>`;
   }
@@ -52,14 +58,15 @@ export function raceChart(race) {
     )
     .join('');
 
-  const fastest = secs.indexOf(fast) + 1;
-  const svg = `<svg class="pace" viewBox="0 0 ${W} ${H}" role="img" aria-labelledby="pace-title pace-desc" data-splits="${secs.join(',')}">
+  const fastest = secs.map((s, i) => (s === fast ? i + 1 : 0)).filter(Boolean);
+  const fastText = fastest.length > 1 ? `kilometres ${fastest.join(', ')} at ${fmt(fast)}` : `number ${fastest[0]} at ${fmt(fast)}`;
+  const svg = `<svg class="pace" viewBox="0 0 ${W} ${H}" role="img" aria-labelledby="pace-title pace-desc" data-splits="${secs.join(',')}" data-total="${total}">
   <title id="pace-title">${race.name}: pace per kilometre</title>
-  <desc id="pace-desc">${n} kilometre splits from ${fmt(secs[0])} to ${fmt(secs[n - 1])} per km, ${fmt(total)} in total, average ${fmt(avg)} per km. Fastest kilometre: number ${fastest} at ${fmt(fast)}. Faster pace is higher on the chart.</desc>
+  <desc id="pace-desc">${n} kilometre splits from ${fmt(secs[0])} to ${fmt(secs[n - 1])} per km, ${fmt(total)} in total, average ${fmt(avg)} per km. Fastest: ${fastText}. Faster pace is higher on the chart.</desc>
   <g class="pace__grid" aria-hidden="true">${grid}</g>
   <g class="pace__kms" aria-hidden="true">${kms}</g>
   <line class="pace__avg" x1="${PAD.l}" x2="${W - PAD.r}" y1="${y(avg).toFixed(1)}" y2="${y(avg).toFixed(1)}" aria-hidden="true"/>
-  <text class="pace__avg-label" x="${W - PAD.r}" y="${(y(avg) - 8).toFixed(1)}" text-anchor="end" aria-hidden="true">avg ${fmt(avg)}/km</text>
+  <text class="pace__avg-label" x="${PAD.l + 8}" y="${(y(avg) + 18).toFixed(1)}" text-anchor="start" aria-hidden="true">avg ${fmt(avg)}/km</text>
   <path class="pace__base" d="${d}"/>
   <path class="pace__line" id="pace-route" d="${d}"/>
   <g class="pace__splits" aria-hidden="true">${dots}</g>

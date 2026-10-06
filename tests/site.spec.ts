@@ -147,8 +147,7 @@ test('race: the pace line draws and the clock reaches the finish', async ({ page
   await jump(page, (await at(1)) + 2);
   await settle(page, 800);
   await expect(page.locator('#ro-km')).toHaveText('5.0');
-  const total = await page.locator('.pace').getAttribute('data-splits');
-  const sum = total!.split(',').map(Number).reduce((a, b) => a + b, 0);
+  const sum = Number(await page.locator('.pace').getAttribute('data-total'));
   const clock = `${Math.floor(sum / 60)}:${String(sum % 60).padStart(2, '0')}`;
   await expect(page.locator('#ro-clock')).toHaveText(clock);
   expect(await page.locator('.pace .split.is-passed').count()).toBe(5);

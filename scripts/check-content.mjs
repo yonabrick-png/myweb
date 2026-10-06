@@ -1,7 +1,7 @@
 // Content gate. Runs before every build and fails it on:
 //  - a sourced fact (status other than personal / general-knowledge) without sourceUrl / retrievedOn
 //  - a bubble over 35 words, a bubble range under 60vh, or two ranges overlapping
-//  - a time that does not parse, or race splits that do not add up to the PR they belong to
+//  - a time that does not parse, or race splits more than 2% off the PR they belong to
 // It warns (does not fail) on entries still marked placeholder, so a draft site can be built.
 import { readFileSync } from 'node:fs';
 import { toSec, fmt } from './time.mjs';
@@ -46,15 +46,18 @@ const pr = prs.find((p) => p.id === race.prId);
 if (!pr) errors.push(`race: prId "${race.prId}" is not in prs.json`);
 else {
   const sum = race.splits.reduce((a, s) => a + toSec(s), 0);
-  if (Math.abs(sum - toSec(pr.time)) > 2) {
+  const off = Math.abs(sum - toSec(pr.time));
+  if (off > toSec(pr.time) * 0.02) {
     errors.push(`race: splits add up to ${fmt(sum)} but the ${pr.label} PR is ${pr.time}`);
+  } else if (off > 0) {
+    warnings.push(`race: splits add up to ${fmt(sum)}, the official ${pr.label} time is ${pr.time}; the clock is scaled to finish on ${pr.time}`);
   }
 }
 if (race.placeholder) warnings.push('race: splits and notes are placeholders');
 for (const n of notes) if (!(n.at >= 0 && n.at <= 1)) errors.push(`race note ${n.id}: at must be 0..1`);
 for (const p of projects) if (!/^https?:\/\//.test(p.url)) errors.push(`project ${p.id}: url must be http(s)`);
 
-if (warnings.length) console.warn(`Content warnings (shown as "sample" on the page):\n  ${warnings.join('\n  ')}`);
+if (warnings.length) console.warn(`Content warnings:\n  ${warnings.join('\n  ')}`);
 if (errors.length) {
   console.error(`Content check failed:\n  ${errors.join('\n  ')}`);
   process.exit(1);

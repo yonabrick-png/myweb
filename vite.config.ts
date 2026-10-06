@@ -110,7 +110,7 @@ function contentInHtml(): Plugin {
       };
 
       const pr = prs.find((p) => p.id === race.prId);
-      const chart = raceChart(race);
+      const chart = raceChart(race, pr ? toSec(pr.time) : undefined);
       const noteHtml = (n: Note) => `<li class="note" data-at="${n.at}"><h3>${esc(n.title)}</h3><p>${esc(n.text)}</p></li>`;
 
       const projectHtml = (p: Project) =>

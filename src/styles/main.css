@@ -574,6 +574,8 @@ html:not(.race-live) .readout { display: none; }
   /* The chart scales down a lot on a phone; keep its labels legible. */
   .pace text { font-size: 22px; }
   .pace__splits text { font-size: 20px; }
+  /* The average is in the copy above; at this size its label would crowd the split labels. */
+  .pace__avg-label { display: none; }
 }
 
 /* ---------- Projects ---------- */

@@ -22,11 +22,11 @@ Everything on the page comes from `src/content/*.json` and is written into the H
 |---|---|
 | `bubbles.json` | The five notes that pop up during the lap. `status: personal` is your own words: rewrite freely. Max 35 words each. |
 | `prs.json` | Personal records: distance, time (`m:ss` or `h:mm:ss`), race, month. Pace per km is worked out for you. |
-| `race.json` | The best race: per-km splits (they must add up to that PR's time) and four notes placed along the race (`at` 0..1). |
+| `race.json` | The best race: per-km splits as your watch recorded them (within 2% of that PR's time; the race clock is scaled to finish on the official time) and notes placed along the race (`at` 0..1). |
 | `projects.json` | Project cards: name, one line, tags, link. |
 
-**The PR times, race splits and race notes are placeholders.** Entries with `"placeholder": true` show a yellow *Sample* tag on the page and a warning at build time. Put in your real numbers and set `placeholder` to `false`.
+A PR's `race` and `date` are optional; leave them empty and the card shows just the time and pace. Mark anything not yet real with `"placeholder": true`: it gets a yellow *Sample* tag on the page and a warning at build time.
 
 The project links point at GitHub repos. Skyline Capital, Flamme Rouge and Online Orders API are private, so visitors get a 404 there: swap in a live URL or make the repo public.
 
-`npm run build` fails on an unsourced track fact, a note over 35 words, overlapping note ranges, a time that doesn't parse, or splits that don't add up.
+`npm run build` fails on an unsourced track fact, a note over 35 words, overlapping note ranges, a time that doesn't parse, or splits more than 2% off the PR.

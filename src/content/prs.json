@@ -32,10 +32,10 @@
       "id": "5k",
       "label": "5K",
       "meters": 5000,
-      "time": "19:45",
-      "race": "Parkrun",
-      "date": "2026-04",
-      "placeholder": true
+      "time": "19:47",
+      "race": "",
+      "date": "",
+      "placeholder": false
     }
   ]
 }

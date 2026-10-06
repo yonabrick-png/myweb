@@ -21,7 +21,8 @@ Same type and instruments as Flamme Rouge (Barlow 800 italic, JetBrains Mono, in
 
 - Intro notes are written in Yona's voice as a first draft (`status: personal`) for Yona to rewrite.
 - Track facts are sourced (dlgsc.wa.gov.au sports dimensions guide, which reproduces the World Athletics figures). Retrieved 2026-10-06 via search; the page itself was not reachable from the build environment.
-- PR times, the race splits and race notes are placeholders, tagged *Sample* on the page and warned about at build time, because the real numbers were not available.
+- PRs are Yona's own: 1000 m 3:06, 1500 m 4:44, 2000 m 6:50, 5K 19:47. Races and dates weren't given, so the cards leave them out rather than invent them.
+- The best race is the 5K, with Yona's watch splits (3:57, 4:00, 3:57, 4:00, 3:57). They add up to 19:51, four seconds over the official 19:47, which is normal for auto-lap splits. The splits are shown as recorded and the race clock is scaled so the finish reads 19:47. The race notes describe only what the splits show.
 
 ## anime.js fixes carried over
 
