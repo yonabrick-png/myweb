@@ -48,3 +48,10 @@ Yona asked for the photo library to be its own page, with a section for cars whe
 - **The photo:** Yona's own, re-saved without metadata (it carried no location data). A smaller copy is used for the teaser.
 - **Artifact preview:** the artifact build now runs once per page (`ARTIFACT_PAGE`), and the library page is published as a second file beside the main one, with the photos.
 
+
+### More cars (2026-10-08)
+
+- Added the Lamborghini Veneno (grey coupé, 2013), Lamborghini Sesto Elemento (2010) and Ferrari F40 (1987), identified from the museum signs and plaques in Yona's photos. The Veneno and Sesto Elemento are at MUDETEC, Lamborghini's museum in the Sant'Agata Bolognese factory; the F40 at the Museo Ferrari in Maranello.
+- Veneno: the museum wall says 2014, which is the Roadster's year; the photographed car is the grey coupé Lamborghini keeps at MUDETEC, from the 2013 coupé series (3 sold plus this one, so 4 coupés; 9 roadsters). Legendary.
+- F40: sources disagree on the total (1,311 or 1,315); the card uses 1,315, RM Sotheby's figure from Maranello's records. Either way it is Uncommon on the scale, so the frame is green, not gold. The scale stays as published rather than being bent for a famous car.
+- Each car photo can set a `focus` (object-position) so the card crop centres on the car.

@@ -183,6 +183,11 @@ test('library page, no JavaScript: cards, rarity scale and photos read as a docu
   await expect(card.locator('.card__name')).toContainText('Centenario');
   await expect(card.locator('.card__rarity')).toHaveText(/Legendary/);
   expect((await card.locator('img').getAttribute('alt'))!.length).toBeGreaterThan(20);
+  // Rarity follows the number built: 4 Veneno coupés, 1,315 F40s.
+  await expect(page.locator('#car-lamborghini-veneno .card')).toHaveAttribute('data-rarity', 'legendary');
+  await expect(page.locator('#car-ferrari-f40 .card')).toHaveAttribute('data-rarity', 'uncommon');
+  for (const alt of await page.locator('.card img').evaluateAll((els) => els.map((e) => e.getAttribute('alt') ?? '')))
+    expect(alt.length).toBeGreaterThan(20);
   await expect(page.locator('.sources__list li').first()).toBeVisible();
   await page.screenshot({ path: 'screenshots/library-no-js.png', fullPage: true });
   await ctx.close();

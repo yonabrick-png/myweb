@@ -242,7 +242,7 @@
   background-size: 100% 100%, 260% 260%;
   background-position: center, var(--mx) var(--my);
   mix-blend-mode: overlay;
-  opacity: 0.45;
+  opacity: 0.25;
   transition: opacity 300ms ease;
 }
 .card.is-tilting::after { opacity: 1; }

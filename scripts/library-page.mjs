@@ -68,7 +68,7 @@ export function libraryPage(html, data) {
       `<div class="card__face">` +
       `<header class="card__top"><h3 class="card__name" id="car-${esc(c.id)}-name"><small>${esc(c.make)}</small>${esc(c.model)}</h3>` +
       `<p class="card__power" aria-label="${esc(c.power)}">${digits(c.power)}</p></header>` +
-      `<a class="card__art" href="${esc(c.photo.src)}" rel="noopener"><img src="${esc(c.photo.src)}" alt="${esc(c.photo.alt)}" loading="lazy" decoding="async"/></a>` +
+      `<a class="card__art" href="${esc(c.photo.src)}" rel="noopener"><img src="${esc(c.photo.src)}" alt="${esc(c.photo.alt)}" loading="lazy" decoding="async"${c.photo.focus ? ` style="object-position: ${esc(c.photo.focus)}"` : ''}/></a>` +
       `<p class="card__type">${type}</p>` +
       `<dl class="card__stats">${stats}</dl>` +
       `<p class="card__text">${esc(c.text)} ${cite([c.sourceUrl, ...(c.extraSources ?? [])], `${c.make} ${c.model}`)}</p>` +

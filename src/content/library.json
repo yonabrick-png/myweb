@@ -34,6 +34,44 @@
   ],
   "cars": [
     {
+      "id": "lamborghini-veneno",
+      "make": "Lamborghini",
+      "model": "Veneno",
+      "version": "Coupé",
+      "year": 2013,
+      "power": "750 CV",
+      "engine": "V12",
+      "built": 4,
+      "builtNote": "4 coupés, plus 9 roadsters",
+      "stats": [
+        {
+          "label": "0–100 km/h",
+          "value": "2.8 s"
+        },
+        {
+          "label": "Top speed",
+          "value": "355 km/h"
+        },
+        {
+          "label": "Coupés built",
+          "value": "4"
+        }
+      ],
+      "text": "Made for Lamborghini's 50th anniversary: 13 in all, and every one sold before it was shown. This grey coupé is the one Lamborghini kept for its own museum.",
+      "spotted": "MUDETEC museum, Lamborghini factory, Sant'Agata Bolognese",
+      "photo": {
+        "src": "photos/cars/lamborghini-veneno.jpg",
+        "thumb": "photos/cars/lamborghini-veneno-sm.jpg",
+        "focus": "50% 68%",
+        "alt": "A grey Lamborghini Veneno coupé with a red lip on its front splitter, seen head-on in a white exhibition room, with a design sketch of the car on the wall behind it."
+      },
+      "sourceUrl": "https://www.lamborghini.com/en-en/history/few-off/veneno",
+      "extraSources": [
+        "https://www.lamborghini.com/en-en/news/lamborghini-veneno-few-50th-anniversary"
+      ],
+      "retrievedOn": "2026-10-08"
+    },
+    {
       "id": "lamborghini-centenario",
       "make": "Lamborghini",
       "model": "Centenario",
@@ -58,15 +96,92 @@
         }
       ],
       "text": "Made in 2016 to mark 100 years since Ferruccio Lamborghini was born. All 40 were sold before its debut at the Geneva Motor Show.",
-      "spotted": "Lamborghini factory, Sant'Agata Bolognese",
+      "spotted": "MUDETEC museum, Lamborghini factory, Sant'Agata Bolognese",
       "photo": {
         "src": "photos/cars/lamborghini-centenario.jpg",
         "thumb": "photos/cars/lamborghini-centenario-sm.jpg",
-        "alt": "A black carbon-fibre Lamborghini Centenario with yellow trim, seen head-on in a white exhibition room, with a design sketch of the car on the wall behind it."
+        "alt": "A black carbon-fibre Lamborghini Centenario with yellow trim, seen head-on in a white exhibition room, with a design sketch of the car on the wall behind it.",
+        "focus": "50% 72%"
       },
       "sourceUrl": "https://www.lamborghini.com/en-en/history/centenario",
       "extraSources": [
         "https://www.lamborghini.com/en-en/news/lamborghini-centenario-perfect-few"
+      ],
+      "retrievedOn": "2026-10-08"
+    },
+    {
+      "id": "lamborghini-sesto-elemento",
+      "make": "Lamborghini",
+      "model": "Sesto Elemento",
+      "version": "Track only",
+      "year": 2010,
+      "power": "570 CV",
+      "engine": "V10",
+      "built": 20,
+      "builtNote": "20 built",
+      "stats": [
+        {
+          "label": "0–100 km/h",
+          "value": "2.5 s"
+        },
+        {
+          "label": "Weight",
+          "value": "999 kg"
+        },
+        {
+          "label": "Built",
+          "value": "20"
+        }
+      ],
+      "text": "\"Sixth element\" is carbon, and the car is built around carbon fibre: 999 kg with the engine and gearbox. Made only for the track; none of the 20 is road legal.",
+      "spotted": "MUDETEC museum, Lamborghini factory, Sant'Agata Bolognese",
+      "photo": {
+        "src": "photos/cars/lamborghini-sesto-elemento.jpg",
+        "thumb": "photos/cars/lamborghini-sesto-elemento-sm.jpg",
+        "focus": "50% 70%",
+        "alt": "A matte dark carbon-fibre Lamborghini Sesto Elemento with two red patches on its bonnet, seen head-on in a white exhibition room, with a design sketch of the car on the wall behind it."
+      },
+      "sourceUrl": "https://www.lamborghini.com/en-en/history/few-off/sesto-elemento",
+      "extraSources": [
+        "https://www.lamborghini.com/en-en/news/lamborghini-sesto-elemento-lightest-few-all"
+      ],
+      "retrievedOn": "2026-10-08"
+    },
+    {
+      "id": "ferrari-f40",
+      "make": "Ferrari",
+      "model": "F40",
+      "version": "Coupé",
+      "year": 1987,
+      "power": "478 CV",
+      "engine": "Twin-turbo V8",
+      "built": 1315,
+      "builtNote": "1,315 built (some sources say 1,311)",
+      "stats": [
+        {
+          "label": "0–100 km/h",
+          "value": "4.1 s"
+        },
+        {
+          "label": "Top speed",
+          "value": "324 km/h"
+        },
+        {
+          "label": "Built",
+          "value": "1,315"
+        }
+      ],
+      "text": "Made for Ferrari's 40th anniversary in 1987. A twin-turbo V8 in a car weighing just 1,100 kg. Planned as a run of 400; demand took it past 1,300.",
+      "spotted": "Museo Ferrari, Maranello",
+      "photo": {
+        "src": "photos/cars/ferrari-f40.jpg",
+        "thumb": "photos/cars/ferrari-f40-sm.jpg",
+        "focus": "50% 62%",
+        "alt": "A red Ferrari F40 seen from the front three-quarter angle in a dark museum room, behind a red floor line, with its name on a plaque in the foreground."
+      },
+      "sourceUrl": "https://ferrari.com/en-ET/history/moments/1987/enzos-dream",
+      "extraSources": [
+        "https://rmsothebys.com/auctions/az17/lots/r270-1990-ferrari-f40/"
       ],
       "retrievedOn": "2026-10-08"
     }
