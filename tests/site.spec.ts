@@ -177,7 +177,9 @@ test('library page, no JavaScript: cards, rarity scale and photos read as a docu
   const page = await ctx.newPage();
   await page.goto('/library.html');
   await expect(page.locator('h1')).toHaveText('Library');
-  expect(await page.locator('.legend li').count()).toBe(5);
+  // Five tiers plus the Icon rule.
+  expect(await page.locator('.legend li.rarity:not(.rarity--icon)').count()).toBe(5);
+  await expect(page.locator('.legend .rarity--icon')).toContainText('Icon');
   const card = page.locator('#car-lamborghini-centenario .card');
   await expect(card).toHaveAttribute('data-rarity', 'legendary');
   await expect(card.locator('.card__name')).toContainText('Centenario');
