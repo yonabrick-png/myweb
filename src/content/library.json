@@ -1,5 +1,5 @@
 {
-  "$comment": "The library page. Cars: one entry per car photo, shown as a collector card. Rarity is worked out at build time from `built` (how many of that exact version were made) using the `rarity` scale below, so it is never hand-picked. Every car fact needs a sourceUrl. Photos go in public/photos/; every photo needs alt text.",
+  "$comment": "The library page. Cars: one entry per car photo, shown as a collector card. Rarity is worked out at build time from `built` (how many of that exact version were made) using the `rarity` scale below, so it is never hand-picked. A car marked `icon` (a landmark car, with a sourced `iconReason`) moves up `iconBonus` tiers, never past the top. Every car fact needs a sourceUrl. Photos go in public/photos/; every photo needs alt text.",
   "rarity": [
     {
       "id": "common",
@@ -171,7 +171,7 @@
           "value": "1,315"
         }
       ],
-      "text": "Made for Ferrari's 40th anniversary in 1987. A twin-turbo V8 in a car weighing just 1,100 kg. Planned as a run of 400; demand took it past 1,300.",
+      "text": "Made for Ferrari's 40th anniversary in 1987: the last car Enzo Ferrari approved, and the first production car past 200 mph (324 km/h).",
       "spotted": "Museo Ferrari, Maranello",
       "photo": {
         "src": "photos/cars/ferrari-f40.jpg",
@@ -181,11 +181,15 @@
       },
       "sourceUrl": "https://ferrari.com/en-ET/history/moments/1987/enzos-dream",
       "extraSources": [
+        "https://rmsothebys.com/auctions/lf17/lots/r152-1988-ferrari-f40/",
         "https://rmsothebys.com/auctions/az17/lots/r270-1990-ferrari-f40/"
       ],
-      "retrievedOn": "2026-10-08"
+      "retrievedOn": "2026-10-08",
+      "icon": true,
+      "iconReason": "The last car Enzo Ferrari approved, and the first production car past 200 mph"
     }
   ],
   "photos": [],
-  "emptySlots": 6
+  "emptySlots": 6,
+  "iconBonus": 2
 }

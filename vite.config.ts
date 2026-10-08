@@ -43,6 +43,7 @@ interface Car {
   make: string;
   model: string;
   built: number;
+  icon?: boolean;
   photo: { src: string; thumb?: string; alt: string };
 }
 interface Library {
@@ -50,6 +51,7 @@ interface Library {
   cars: Car[];
   photos: unknown[];
   emptySlots: number;
+  iconBonus?: number;
 }
 interface Project {
   id: string;
@@ -150,7 +152,7 @@ function contentInHtml(): Plugin {
 
       // The photography block points at the library page, with the teaser car's card art.
       const teaser = library.cars.find((c) => c.id === photography.teaser) ?? library.cars[0];
-      const teaserTier = teaser && rarityOf(library.rarity, teaser.built);
+      const teaserTier = teaser && rarityOf(library.rarity, teaser.built, teaser.icon, library.iconBonus ?? 0);
       const libraryLink = teaser
         ? `<a class="teaser card--${teaserTier.id}" href="library.html">` +
           `<img src="${esc(teaser.photo.thumb ?? teaser.photo.src)}" alt="" loading="lazy" decoding="async"/>` +

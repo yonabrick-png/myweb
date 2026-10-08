@@ -69,6 +69,8 @@
 .rarity--rare b, .rarity--rare .mark { color: var(--r-rare); }
 .rarity--epic b, .rarity--epic .mark { color: var(--r-epic); }
 .rarity--legendary b, .rarity--legendary .mark { color: var(--r-legendary); }
+.rarity--icon { padding-left: 14px; border-left: 1px solid var(--line); }
+.rarity--icon b { color: var(--paper); padding: 0 5px; border: 1px solid var(--dim); border-radius: 2px; }
 
 /* ---------- Collector cards ---------- */
 .cards {
@@ -224,6 +226,15 @@
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+}
+.card__icon {
+  padding: 1px 6px;
+  border: 1px solid currentColor;
+  border-radius: 2px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--tartan-ink);
 }
 .card__no { margin-left: auto; font-variant-numeric: tabular-nums; }
 

@@ -4,11 +4,17 @@
 export const esc = (s) =>
   String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
-/** The tier a car falls in: the rarest tier whose maxBuilt it is within. */
-export function rarityOf(scale, built) {
-  let tier = scale[0];
-  for (const t of scale) if (t.maxBuilt === null || built <= t.maxBuilt) tier = t;
-  return tier;
+/**
+ * The tier a car falls in: the rarest tier whose maxBuilt it is within. An icon (a landmark car)
+ * then moves up `bonus` tiers, never past the top one.
+ */
+export function rarityOf(scale, built, icon = false, bonus = 0) {
+  let i = 0;
+  scale.forEach((t, k) => {
+    if (t.maxBuilt === null || built <= t.maxBuilt) i = k;
+  });
+  if (icon) i = Math.min(i + bonus, scale.length - 1);
+  return scale[i];
 }
 
 /** Small inline marks for each tier: circle, diamond, then one to three stars. */
@@ -33,7 +39,7 @@ export function rarityMark(id) {
 const digits = (t) => esc(t).replace(/\d+/g, (n) => `<span class="d">${n}</span>`);
 
 export function libraryPage(html, data) {
-  const { rarity, cars, photos, emptySlots } = data;
+  const { rarity, cars, photos, emptySlots, iconBonus = 0 } = data;
 
   // One numbered list of sources, in page order, each URL once.
   const urls = [];
@@ -54,11 +60,14 @@ export function libraryPage(html, data) {
   const legend = [...rarity]
     .reverse()
     .map((t) => `<li class="rarity rarity--${t.id}">${rarityMark(t.id)}<b>${esc(t.name)}</b><span>${esc(t.label)}</span></li>`)
-    .join('');
+    .join('') +
+    (iconBonus
+      ? `<li class="rarity rarity--icon"><b>Icon</b><span>A landmark car moves up ${iconBonus === 1 ? 'one tier' : `${iconBonus} tiers`}</span></li>`
+      : '');
 
   const total = String(cars.length).padStart(3, '0');
   const card = (c, i) => {
-    const tier = rarityOf(rarity, c.built);
+    const tier = rarityOf(rarity, c.built, c.icon, iconBonus);
     const no = `${String(i + 1).padStart(3, '0')}/${total}`;
     const type = [c.engine, c.version, c.year].filter(Boolean).map(esc).join(' · ');
     const stats = c.stats.map((s) => `<div><dt>${esc(s.label)}</dt><dd>${digits(s.value)}</dd></div>`).join('');
@@ -74,6 +83,7 @@ export function libraryPage(html, data) {
       `<p class="card__text">${esc(c.text)} ${cite([c.sourceUrl, ...(c.extraSources ?? [])], `${c.make} ${c.model}`)}</p>` +
       `<p class="card__spotted"><span>Spotted at</span> ${esc(c.spotted)}</p>` +
       `<footer class="card__foot"><span class="card__rarity">${rarityMark(tier.id)}${esc(tier.name)}</span>` +
+      (c.icon ? `<span class="card__icon" title="${esc(c.iconReason ?? 'Icon')}">Icon</span>` : '') +
       `<span class="card__no">${no}</span></footer>` +
       `</div></article></li>`
     );

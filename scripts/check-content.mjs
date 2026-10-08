@@ -65,6 +65,7 @@ for (const c of library.cars) {
   if (!(Number.isInteger(c.built) && c.built > 0)) errors.push(`${where}: built must be a whole number of cars`);
   if (!c.photo?.src) errors.push(`${where}: photo.src is empty`);
   if (!c.photo?.alt) errors.push(`${where}: photo.alt is empty; describe what is in the picture`);
+  if (c.icon && !c.iconReason) errors.push(`${where}: icon cars need an iconReason saying why`);
 }
 if (photography.teaser && !library.cars.some((c) => c.id === photography.teaser)) {
   errors.push(`hobbies: teaser "${photography.teaser}" is not a car in library.json`);
