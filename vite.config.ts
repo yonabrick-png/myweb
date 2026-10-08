@@ -2,6 +2,7 @@ import { defineConfig, type Plugin } from 'vite';
 import { readFileSync } from 'node:fs';
 import { raceChart } from './scripts/race-chart.mjs';
 import { toSec, fmt, pacePerKm } from './scripts/time.mjs';
+import { bikeSvg } from './scripts/bike-svg.mjs';
 
 interface Bubble {
   id: string;
@@ -31,6 +32,17 @@ interface Note {
   at: number;
   title: string;
   text: string;
+}
+interface Photo {
+  src: string;
+  alt: string;
+  caption?: string;
+  place?: string;
+  date?: string;
+}
+interface Hobbies {
+  cycling: { bike: string; text: string; siteName: string; siteUrl: string };
+  photography: { text: string; emptySlots: number; photos: Photo[] };
 }
 interface Project {
   id: string;
@@ -77,6 +89,7 @@ function contentInHtml(): Plugin {
       const { prs } = read<{ prs: PR[] }>('prs.json');
       const { race, notes } = read<{ race: Race; notes: Note[] }>('race.json');
       const { projects } = read<{ projects: Project[] }>('projects.json');
+      const hobbies = read<Hobbies>('hobbies.json');
 
       // One numbered list of sources, in page order, each URL once.
       const urls: string[] = [];
@@ -121,6 +134,29 @@ function contentInHtml(): Plugin {
         `<span class="project__tags">${p.tags.map((t) => `<span>${esc(t)}</span>`).join('')}</span>` +
         `<span class="project__go" aria-hidden="true"></span></a></li>`;
 
+      const { cycling, photography } = hobbies;
+      const cyclingHtml =
+        `<p>${esc(cycling.text)} <a href="${esc(cycling.siteUrl)}" rel="noopener">${esc(cycling.siteName)}</a>.</p>`;
+
+      // The photo library: real photos when there are some, otherwise empty frames that say so.
+      const photoHtml = (ph: Photo) => {
+        const meta = [ph.caption, ph.place, ph.date && monthYear(ph.date)].filter(Boolean).map((t) => esc(String(t)));
+        return (
+          `<li class="photo"><figure><img src="${esc(ph.src)}" alt="${esc(ph.alt)}" loading="lazy" decoding="async"/>` +
+          (meta.length ? `<figcaption>${meta.join(' · ')}</figcaption>` : '') +
+          `</figure></li>`
+        );
+      };
+      const libraryHtml = photography.photos.length
+        ? photography.photos.map(photoHtml).join('')
+        : Array.from(
+            { length: photography.emptySlots },
+            (_, i) => `<li class="photo photo--empty" aria-hidden="true"><span class="photo__frame">${String(i + 1).padStart(2, '0')}</span></li>`,
+          ).join('');
+      const libraryNote = photography.photos.length
+        ? ''
+        : '<p class="library__empty">The library is still being developed. Photos are coming soon.</p>';
+
       // Cite in the order things appear on the page, so source numbers read top to bottom.
       const bubblesOut = bubbles.map(bubbleHtml).join('');
       const sources = urls
@@ -139,6 +175,11 @@ function contentInHtml(): Plugin {
         .replaceAll('<!--race-km-->', String(chart.n))
         .replace('<!--race-chart-->', chart.svg)
         .replace('<!--race-notes-->', notes.map(noteHtml).join(''))
+        .replace('<!--bike-name-->', esc(cycling.bike))
+        .replace('<!--cycling-->', cyclingHtml)
+        .replace('<!--bike-svg-->', bikeSvg(esc(cycling.bike)))
+        .replace('<!--photography-->', `<p>${esc(photography.text)}</p>${libraryNote}`)
+        .replace('<!--library-->', libraryHtml)
         .replace('<!--projects-->', projects.map(projectHtml).join(''))
         .replace('<!--sources-->', sources);
     },

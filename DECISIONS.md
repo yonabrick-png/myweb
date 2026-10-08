@@ -28,3 +28,11 @@ Same type and instruments as Flamme Rouge (Barlow 800 italic, JetBrains Mono, in
 
 - `src/scroll-settle.ts` (from Flamme Rouge): runs every scroll observer on `scrollend`, so a slow frame can't leave scroll-linked state one step behind.
 - The camera timeline also applies the camera on `onComplete`/`onBegin`: a jump past the end of the chapter completes the timeline without an `onUpdate`, which left the last shot unapplied.
+
+## Hobbies chapter
+
+Yona asked for their hobbies: cycling (their bike is a Merida Scultura Juliet 4000) and photography, with a place for a photo library to fill later.
+
+- **Cycling:** the bike's name set in the display face, a short line linking to Flamme Rouge, and a single-line road-bike drawing (`scripts/bike-svg.mjs`) that `createDrawable` draws in on scroll: wheels, then frame, then cockpit, the same stroke effect as the pace chart. The drawing is a generic road bike, not a likeness of the Scultura, and the page makes no claims about its specs.
+- **Photography:** a grid of 4:5 frames from `hobbies.json`. With no photos yet it shows six empty frames with viewfinder corners and frame numbers, and says the library is "still being developed". The build fails on a photo without alt text.
+

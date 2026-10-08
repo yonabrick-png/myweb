@@ -1,0 +1,14 @@
+{
+  "$comment": "The hobbies chapter. Photos: put image files in public/photos/ and add one entry per photo ({ \"src\": \"photos/name.jpg\", \"alt\": \"what is in the picture\", \"caption\": \"optional\", \"place\": \"optional\", \"date\": \"YYYY-MM, optional\" }). While the list is empty the page shows `emptySlots` empty frames.",
+  "cycling": {
+    "bike": "Merida Scultura Juliet 4000",
+    "text": "When I'm not running, I'm riding. Cycling is the other half of my training, and the sport I love enough to build a whole website about.",
+    "siteName": "Flamme Rouge",
+    "siteUrl": "https://github.com/yonabrick-png/Cycling-website"
+  },
+  "photography": {
+    "text": "I also take photos. This is my library: the pictures I want to keep.",
+    "emptySlots": 6,
+    "photos": []
+  }
+}

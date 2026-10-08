@@ -11,6 +11,7 @@ const { bubbles } = read('bubbles.json');
 const { prs } = read('prs.json');
 const { race, notes } = read('race.json');
 const { projects } = read('projects.json');
+const { photography } = read('hobbies.json');
 const errors = [];
 const warnings = [];
 
@@ -56,6 +57,10 @@ else {
 if (race.placeholder) warnings.push('race: splits and notes are placeholders');
 for (const n of notes) if (!(n.at >= 0 && n.at <= 1)) errors.push(`race note ${n.id}: at must be 0..1`);
 for (const p of projects) if (!/^https?:\/\//.test(p.url)) errors.push(`project ${p.id}: url must be http(s)`);
+photography.photos.forEach((ph, i) => {
+  if (!ph.src) errors.push(`photo ${i + 1}: src is empty`);
+  if (!ph.alt) errors.push(`photo ${i + 1} (${ph.src}): alt text is empty; describe what is in the picture`);
+});
 
 if (warnings.length) console.warn(`Content warnings:\n  ${warnings.join('\n  ')}`);
 if (errors.length) {

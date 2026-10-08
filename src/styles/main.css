@@ -578,6 +578,95 @@ html:not(.race-live) .readout { display: none; }
   .pace__avg-label { display: none; }
 }
 
+/* ---------- Hobbies ---------- */
+.chapter--hobbies .chapter__copy { max-width: 60rem; }
+.hobby {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+  gap: clamp(28px, 5vw, 80px);
+  align-items: center;
+  margin-top: 10vh;
+  padding-top: 5vh;
+  border-top: 1px solid var(--line);
+}
+.hobby__copy { min-width: 0; max-width: 34rem; }
+.hobby__copy p { margin: 0 0 1em; color: color-mix(in srgb, var(--paper) 88%, var(--dim)); }
+.hobby__copy a { color: var(--paper); }
+.hobby__title {
+  margin: 0 0 0.9rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--tartan);
+}
+.hobby__name {
+  margin: 0 0 0.5em !important;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 800;
+  font-size: clamp(2.2rem, 4.4vw, 3.6rem);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  color: var(--paper) !important;
+  text-wrap: balance;
+}
+
+.hobby__art { min-width: 0; }
+.bike { display: block; width: 100%; height: auto; max-height: 60vh; overflow: visible; }
+.bike * { fill: none; stroke: var(--paper); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.bike .bike__tyre { stroke-width: 7; stroke: #3a3d43; }
+.bike .bike__rim { stroke: var(--tartan); stroke-width: 2.5; }
+.bike__frame * { stroke-width: 6; }
+.bike .bike__saddle { stroke-width: 7; }
+.bike .bike__chain { stroke: var(--dim); stroke-width: 1.5; stroke-dasharray: 3 4; }
+.bike .bike__ground { stroke: var(--line); stroke-width: 1; }
+
+/* Photo library: real photos in a grid, or empty frames with viewfinder corners. */
+.hobby--photo { align-items: start; }
+.library__empty { font-family: var(--font-mono); font-size: 0.85rem; color: var(--dim) !important; }
+.library {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  min-width: 0;
+}
+.photo { min-width: 0; }
+.photo figure { margin: 0; display: grid; gap: 8px; }
+.photo img { display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; background: var(--ink-2); }
+.photo figcaption { font-family: var(--font-mono); font-size: 0.72rem; color: var(--dim); }
+.photo--empty {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  background: var(--ink-2);
+  --corner: linear-gradient(var(--dim), var(--dim));
+  background-image: var(--corner), var(--corner), var(--corner), var(--corner), var(--corner), var(--corner), var(--corner), var(--corner);
+  background-size: 16px 1.5px, 1.5px 16px, 16px 1.5px, 1.5px 16px, 16px 1.5px, 1.5px 16px, 16px 1.5px, 1.5px 16px;
+  background-position: 12px 12px, 12px 12px, calc(100% - 12px) 12px, calc(100% - 12px) 12px, 12px calc(100% - 12px), 12px calc(100% - 12px), calc(100% - 12px) calc(100% - 12px), calc(100% - 12px) calc(100% - 12px);
+  background-repeat: no-repeat;
+  background-color: var(--ink-2);
+}
+.photo__frame {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  color: #4a4d53;
+}
+.library-live .photo { opacity: 0; }
+
+@media (max-width: 860px) {
+  .hobby { grid-template-columns: minmax(0, 1fr); }
+  .library { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
 /* ---------- Projects ---------- */
 .projects {
   list-style: none;

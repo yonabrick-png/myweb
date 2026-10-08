@@ -3,6 +3,7 @@ import { detectEnv } from './env';
 import { setupPrs } from './sections/prs';
 import { setupRace } from './sections/race';
 import { setupProjects } from './sections/projects';
+import { setupHobbies } from './sections/hobbies';
 import { watchScrollSettle } from './scroll-settle';
 
 const env = detectEnv();
@@ -68,5 +69,6 @@ if (env.mode !== 'text') {
 
 setupPrs(env.mode);
 setupRace(env.mode);
+setupHobbies(env.mode);
 setupProjects(env.mode);
 if (env.mode === 'scroll') watchScrollSettle();

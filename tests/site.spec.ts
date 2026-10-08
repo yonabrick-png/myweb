@@ -76,6 +76,9 @@ test('no JavaScript: the page reads as a document', async ({ browser }) => {
   await expect(page.locator('#pace-route')).toBeVisible();
   expect(await page.locator('.pace .split').count()).toBe(5);
   expect(await page.locator('.project a').count()).toBe(4);
+  await expect(page.locator('.bike')).toBeVisible();
+  await expect(page.locator('.hobby__name')).toHaveText('Merida Scultura Juliet 4000');
+  expect(await page.locator('.library .photo').count()).toBeGreaterThan(0);
   await expect(page.locator('.sources__list li').first()).toBeVisible();
   await page.screenshot({ path: 'screenshots/no-js.png', fullPage: true });
   await ctx.close();
@@ -151,4 +154,20 @@ test('race: the pace line draws and the clock reaches the finish', async ({ page
   const clock = `${Math.floor(sum / 60)}:${String(sum % 60).padStart(2, '0')}`;
   await expect(page.locator('#ro-clock')).toHaveText(clock);
   expect(await page.locator('.pace .split.is-passed').count()).toBe(5);
+});
+
+test('hobbies: the bike draws in as it scrolls into view', async ({ page }) => {
+  await page.goto('/?quality=high');
+  await worldReady(page);
+  await expect(page.locator('html')).toHaveClass(/bike-live/);
+  const centre = await page.evaluate(() => {
+    const r = document.querySelector('.bike')!.getBoundingClientRect();
+    return r.top + scrollY - (innerHeight - r.height) / 2;
+  });
+  await jump(page, centre + 40);
+  // Fully drawn: every stroke's dash offset has run out.
+  const undrawn = await page.locator('.bike line, .bike path, .bike circle').evaluateAll((els) =>
+    els.filter((e) => e.getAttribute('draw') && e.getAttribute('draw') !== '0 1').length,
+  );
+  expect(undrawn).toBe(0);
 });
