@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Yona's Library</title>
+    <meta name="description" content="Yona's photo library: cars as collector cards, with rarity set by how many were ever built." />
+    <meta name="theme-color" content="#0f1012" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/src/styles/main.css" />
+    <link rel="stylesheet" href="/src/styles/library.css" />
+    <script>
+      (function () {
+        var d = document.documentElement;
+        d.classList.remove('no-js');
+        d.classList.add('js');
+      })();
+    </script>
+    <script type="module" src="/src/library.ts"></script>
+  </head>
+  <body class="page-library">
+    <header class="bar">
+      <a class="bar__mark" href="./">Yona</a>
+      <span class="bar__here">Library</span>
+      <a class="mode-link" href="./">Back to the lap</a>
+    </header>
+
+    <main>
+      <section class="chapter chapter--library" aria-labelledby="h-library">
+        <div class="chapter__copy">
+          <p class="label"><b>Library</b></p>
+          <h1 id="h-library" class="display">Library</h1>
+          <p class="lede">
+            Photos I've taken. Cars come first: each one gets a collector card, and its rarity comes
+            from how many were ever built.
+          </p>
+        </div>
+
+        <section class="shelf" id="cars" aria-labelledby="h-cars">
+          <div class="shelf__head">
+            <h2 id="h-cars" class="shelf__title">Cars <span><!--car-count--></span></h2>
+            <ul class="legend" aria-label="Rarity, by number built"><!--rarity-legend--></ul>
+          </div>
+          <ul class="cards"><!--cars--></ul>
+        </section>
+
+        <section class="shelf" id="photos" aria-labelledby="h-photos">
+          <div class="shelf__head">
+            <h2 id="h-photos" class="shelf__title">Photos</h2>
+            <!--photos-note-->
+          </div>
+          <ul class="library"><!--photos--></ul>
+        </section>
+
+        <section class="sources" aria-labelledby="h-sources">
+          <h3 id="h-sources" class="label"><b>Sources</b></h3>
+          <ol class="sources__list"><!--sources--></ol>
+        </section>
+      </section>
+    </main>
+  </body>
+</html>

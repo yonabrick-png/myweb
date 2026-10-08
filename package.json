@@ -10,7 +10,7 @@
     "typecheck": "tsc --noEmit",
     "check:content": "node scripts/check-content.mjs",
     "test:e2e": "playwright test",
-    "build:artifact": "npm run check:content && vite build --mode artifact && node scripts/inline-artifact.mjs"
+    "build:artifact": "npm run check:content && vite build --mode artifact && node scripts/inline-artifact.mjs index && ARTIFACT_PAGE=library vite build --mode artifact && node scripts/inline-artifact.mjs library"
   },
   "dependencies": {
     "@fontsource-variable/jetbrains-mono": "^5.3.0",

@@ -36,3 +36,15 @@ Yona asked for their hobbies: cycling (their bike is a Merida Scultura Juliet 40
 - **Cycling:** the bike's name set in the display face, a short line linking to Flamme Rouge, and a single-line road-bike drawing (`scripts/bike-svg.mjs`) that `createDrawable` draws in on scroll: wheels, then frame, then cockpit, the same stroke effect as the pace chart. The drawing is a generic road bike, not a likeness of the Scultura, and the page makes no claims about its specs.
 - **Photography:** a grid of 4:5 frames from `hobbies.json`. With no photos yet it shows six empty frames with viewfinder corners and frame numbers, and says the library is "still being developed". The build fails on a photo without alt text.
 
+## Library page
+
+Yona asked for the photo library to be its own page, with a section for cars where each car photo gets an info card "kind of like a Pokémon card", with a rarity that depends on the car.
+
+- **Separate page:** `library.html` is a second Vite entry with its own small script (`src/library.ts`) and stylesheet (`src/styles/library.css`), sharing `main.css`. No 3D, no Lenis: it is a gallery. The main page's photography block now links to it with the first car's thumbnail, and the bar has a Library link.
+- **Collector cards:** our own trading-card design (not a copy of any card game's layout or marks): a frame in the tier colour, the car's name and power across the top, the photo, a type line, three stats, a sourced line of text, where it was spotted, and a rarity badge with a card number. Numbers settle with the same scramble as the PR cards.
+- **Rarity is computed, never hand-picked:** from how many of that exact version were built, on a fixed scale published on the page (Legendary 20 or fewer, Epic 21 to 100, Rare 101 to 1,000, Uncommon 1,001 to 10,000, Common above). The photographed Centenario is the coupé (20 built, plus 20 roadsters), so it is Legendary.
+- **Holo:** Epic and Legendary cards carry a rainbow foil and a glare spot that follow the pointer, and the card tilts a few degrees. Fine pointers only, off under reduced motion.
+- **Facts:** the Centenario's figures (770 CV V12, 0–100 km/h in 2.8 s, over 350 km/h, 20 coupés and 20 roadsters, sold out before the 2016 Geneva debut, made for the centenary of Ferruccio Lamborghini's birth) come from Lamborghini's own pages, found by search on 2026-10-08; lamborghini.com itself was not reachable from the build environment.
+- **The photo:** Yona's own, re-saved without metadata (it carried no location data). A smaller copy is used for the teaser.
+- **Artifact preview:** the artifact build now runs once per page (`ARTIFACT_PAGE`), and the library page is published as a second file beside the main one, with the photos.
+

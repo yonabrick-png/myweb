@@ -78,7 +78,7 @@ test('no JavaScript: the page reads as a document', async ({ browser }) => {
   expect(await page.locator('.project a').count()).toBe(4);
   await expect(page.locator('.bike')).toBeVisible();
   await expect(page.locator('.hobby__name')).toHaveText('Merida Scultura Juliet 4000');
-  expect(await page.locator('.library .photo').count()).toBeGreaterThan(0);
+  await expect(page.locator('a.teaser')).toHaveAttribute('href', 'library.html');
   await expect(page.locator('.sources__list li').first()).toBeVisible();
   await page.screenshot({ path: 'screenshots/no-js.png', fullPage: true });
   await ctx.close();
@@ -170,4 +170,31 @@ test('hobbies: the bike draws in as it scrolls into view', async ({ page }) => {
     els.filter((e) => e.getAttribute('draw') && e.getAttribute('draw') !== '0 1').length,
   );
   expect(undrawn).toBe(0);
+});
+
+test('library page, no JavaScript: cards, rarity scale and photos read as a document', async ({ browser }) => {
+  const ctx = await browser.newContext({ javaScriptEnabled: false });
+  const page = await ctx.newPage();
+  await page.goto('/library.html');
+  await expect(page.locator('h1')).toHaveText('Library');
+  expect(await page.locator('.legend li').count()).toBe(5);
+  const card = page.locator('#car-lamborghini-centenario .card');
+  await expect(card).toHaveAttribute('data-rarity', 'legendary');
+  await expect(card.locator('.card__name')).toContainText('Centenario');
+  await expect(card.locator('.card__rarity')).toHaveText(/Legendary/);
+  expect((await card.locator('img').getAttribute('alt'))!.length).toBeGreaterThan(20);
+  await expect(page.locator('.sources__list li').first()).toBeVisible();
+  await page.screenshot({ path: 'screenshots/library-no-js.png', fullPage: true });
+  await ctx.close();
+});
+
+test('library page: cards deal in and numbers settle on their true values', async ({ page }, info) => {
+  await page.goto('/library.html');
+  // The true value is in the label; the visible text may already be mid-scramble.
+  const expected = await page.locator('.card__power').first().getAttribute('aria-label');
+  await page.locator('.card').first().scrollIntoViewIfNeeded();
+  await settle(page, 2500);
+  await expect(page.locator('.card__power').first()).toHaveText(expected!);
+  await expect(page.locator('.car').first()).toHaveCSS('opacity', '1');
+  await page.screenshot({ path: `screenshots/${info.project.name}-library.png` });
 });

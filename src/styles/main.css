@@ -146,6 +146,8 @@ a { color: inherit; text-underline-offset: 0.2em; }
   background: linear-gradient(var(--tartan) 0 3px, transparent 3px 7px, var(--tartan) 7px);
   transform: skewX(-18deg);
 }
+.bar__link { margin-left: auto; color: var(--paper); text-decoration: none; }
+.bar__link + .mode-link { margin-left: 0; }
 .mode-link {
   margin-left: auto;
   color: var(--dim);
@@ -660,12 +662,42 @@ html:not(.race-live) .readout { display: none; }
   letter-spacing: 0.1em;
   color: #4a4d53;
 }
-.library-live .photo { opacity: 0; }
 
 @media (max-width: 860px) {
   .hobby { grid-template-columns: minmax(0, 1fr); }
   .library { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
+
+/* Teaser for the library page: the card art of one car and a way in. */
+.teaser {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  align-items: stretch;
+  border: 1px solid var(--line);
+  color: inherit;
+  text-decoration: none;
+  min-width: 0;
+}
+.teaser img { width: 100%; height: 100%; aspect-ratio: 3 / 4; object-fit: cover; object-position: 50% 72%; display: block; }
+.teaser__body { display: grid; align-content: center; gap: 8px; padding: 18px 22px; min-width: 0; }
+.teaser__rarity {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #f5c84c;
+}
+.teaser .mark { fill: currentColor; }
+.teaser__name { font-family: var(--font-display); font-style: italic; font-weight: 800; font-size: clamp(1.7rem, 3vw, 2.4rem); line-height: 0.95; }
+.teaser__go { font-family: var(--font-mono); font-size: 0.78rem; color: var(--tartan); text-decoration: underline; text-underline-offset: 0.25em; }
+.card--epic.teaser .teaser__rarity { color: #b98bff; }
+.card--rare.teaser .teaser__rarity { color: #5aa9ff; }
+.card--uncommon.teaser .teaser__rarity { color: #5cc98a; }
+.card--common.teaser .teaser__rarity { color: var(--dim); }
 
 /* ---------- Projects ---------- */
 .projects {
@@ -742,6 +774,9 @@ html:not(.race-live) .readout { display: none; }
   .project__go { transition: transform 240ms var(--ease-out-quint); }
   .project a:hover .project__go { transform: skewX(-18deg) scaleX(1.8); }
   .links a:hover { color: var(--tartan); }
+  .teaser { transition: border-color 180ms ease; }
+  .teaser:hover { border-color: var(--tartan); }
+  .bar__link:hover { color: var(--tartan); }
 }
 
 .sources .label { margin-bottom: 1rem; }

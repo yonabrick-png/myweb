@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 import { raceChart } from './scripts/race-chart.mjs';
 import { toSec, fmt, pacePerKm } from './scripts/time.mjs';
 import { bikeSvg } from './scripts/bike-svg.mjs';
+import { libraryPage, rarityOf, rarityMark } from './scripts/library-page.mjs';
 
 interface Bubble {
   id: string;
@@ -33,16 +34,22 @@ interface Note {
   title: string;
   text: string;
 }
-interface Photo {
-  src: string;
-  alt: string;
-  caption?: string;
-  place?: string;
-  date?: string;
-}
 interface Hobbies {
   cycling: { bike: string; text: string; siteName: string; siteUrl: string };
-  photography: { text: string; emptySlots: number; photos: Photo[] };
+  photography: { text: string; linkText: string; teaser: string };
+}
+interface Car {
+  id: string;
+  make: string;
+  model: string;
+  built: number;
+  photo: { src: string; thumb?: string; alt: string };
+}
+interface Library {
+  rarity: { id: string; name: string; maxBuilt: number | null; label: string }[];
+  cars: Car[];
+  photos: unknown[];
+  emptySlots: number;
 }
 interface Project {
   id: string;
@@ -84,7 +91,10 @@ function contentInHtml(): Plugin {
         if (p.startsWith(dir)) server.ws.send({ type: 'full-reload' });
       });
     },
-    transformIndexHtml(html) {
+    transformIndexHtml(html, ctx) {
+      const library = read<Library>('library.json');
+      if (ctx.path.endsWith('library.html')) return libraryPage(html, library);
+
       const { bubbles } = read<{ bubbles: Bubble[] }>('bubbles.json');
       const { prs } = read<{ prs: PR[] }>('prs.json');
       const { race, notes } = read<{ race: Race; notes: Note[] }>('race.json');
@@ -138,24 +148,16 @@ function contentInHtml(): Plugin {
       const cyclingHtml =
         `<p>${esc(cycling.text)} <a href="${esc(cycling.siteUrl)}" rel="noopener">${esc(cycling.siteName)}</a>.</p>`;
 
-      // The photo library: real photos when there are some, otherwise empty frames that say so.
-      const photoHtml = (ph: Photo) => {
-        const meta = [ph.caption, ph.place, ph.date && monthYear(ph.date)].filter(Boolean).map((t) => esc(String(t)));
-        return (
-          `<li class="photo"><figure><img src="${esc(ph.src)}" alt="${esc(ph.alt)}" loading="lazy" decoding="async"/>` +
-          (meta.length ? `<figcaption>${meta.join(' · ')}</figcaption>` : '') +
-          `</figure></li>`
-        );
-      };
-      const libraryHtml = photography.photos.length
-        ? photography.photos.map(photoHtml).join('')
-        : Array.from(
-            { length: photography.emptySlots },
-            (_, i) => `<li class="photo photo--empty" aria-hidden="true"><span class="photo__frame">${String(i + 1).padStart(2, '0')}</span></li>`,
-          ).join('');
-      const libraryNote = photography.photos.length
-        ? ''
-        : '<p class="library__empty">The library is still being developed. Photos are coming soon.</p>';
+      // The photography block points at the library page, with the teaser car's card art.
+      const teaser = library.cars.find((c) => c.id === photography.teaser) ?? library.cars[0];
+      const teaserTier = teaser && rarityOf(library.rarity, teaser.built);
+      const libraryLink = teaser
+        ? `<a class="teaser card--${teaserTier.id}" href="library.html">` +
+          `<img src="${esc(teaser.photo.thumb ?? teaser.photo.src)}" alt="" loading="lazy" decoding="async"/>` +
+          `<span class="teaser__body"><span class="teaser__rarity">${rarityMark(teaserTier.id)}${esc(teaserTier.name)}</span>` +
+          `<span class="teaser__name">${esc(teaser.make)} ${esc(teaser.model)}</span>` +
+          `<span class="teaser__go">${esc(photography.linkText)}: ${library.cars.length} car ${library.cars.length === 1 ? 'card' : 'cards'}</span></span></a>`
+        : `<a class="teaser" href="library.html">${esc(photography.linkText)}</a>`;
 
       // Cite in the order things appear on the page, so source numbers read top to bottom.
       const bubblesOut = bubbles.map(bubbleHtml).join('');
@@ -178,8 +180,8 @@ function contentInHtml(): Plugin {
         .replace('<!--bike-name-->', esc(cycling.bike))
         .replace('<!--cycling-->', cyclingHtml)
         .replace('<!--bike-svg-->', bikeSvg(esc(cycling.bike)))
-        .replace('<!--photography-->', `<p>${esc(photography.text)}</p>${libraryNote}`)
-        .replace('<!--library-->', libraryHtml)
+        .replace('<!--photography-->', `<p>${esc(photography.text)}</p>`)
+        .replace('<!--library-link-->', libraryLink)
         .replace('<!--projects-->', projects.map(projectHtml).join(''))
         .replace('<!--sources-->', sources);
     },
@@ -188,22 +190,27 @@ function contentInHtml(): Plugin {
 
 export default defineConfig(({ mode }) => {
   // `vite build --mode artifact` makes one self-contained page for embedded viewers that block
-  // separate asset requests: one JS bundle, fonts inlined into the CSS. scripts/inline-artifact.mjs
-  // then folds the CSS and JS into the HTML.
+  // separate asset requests: one JS bundle, fonts inlined into the CSS. It builds one page at a
+  // time (ARTIFACT_PAGE=index|library) into dist-artifact/<page>/, and scripts/inline-artifact.mjs
+  // then folds that page's CSS and JS into its HTML.
   const artifact = mode === 'artifact';
+  const page = process.env.ARTIFACT_PAGE === 'library' ? 'library' : 'index';
+  const root = new URL('.', import.meta.url).pathname;
   return {
     // Relative asset URLs so the build also runs from a subfolder or an embedded viewer.
     base: './',
     plugins: [contentInHtml()],
     build: {
       target: 'es2022',
-      outDir: artifact ? 'dist-artifact' : 'dist',
+      outDir: artifact ? `dist-artifact/${page}` : 'dist',
       // three is the bulk of the 3D chunk; it loads only when WebGL mode is chosen.
       chunkSizeWarningLimit: artifact ? 2000 : 800,
+      rollupOptions: artifact
+        ? { input: `${root}${page}.html`, output: { inlineDynamicImports: true } }
+        : { input: { index: `${root}index.html`, library: `${root}library.html` } },
       ...(artifact && {
         assetsInlineLimit: 10_000_000,
         cssCodeSplit: false,
-        rollupOptions: { output: { inlineDynamicImports: true } },
       }),
     },
   };

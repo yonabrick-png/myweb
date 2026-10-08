@@ -1,0 +1,263 @@
+/*
+  Library page. Shares main.css (ink, paper, tartan, the bar, chapter type). Adds the collector
+  cards: a paper-and-ink trading card per car, framed in the colour of its rarity tier. Epic and
+  legendary cards carry a holographic sheen that follows the pointer.
+*/
+:root {
+  --r-common: #8d9097;
+  --r-uncommon: #5cc98a;
+  --r-rare: #5aa9ff;
+  --r-epic: #b98bff;
+  --r-legendary: #f5c84c;
+}
+
+.bar__here {
+  color: var(--dim);
+  padding-left: 14px;
+  border-left: 1px solid var(--line);
+}
+
+.chapter--library .chapter__copy { max-width: 44rem; }
+
+/* A shelf: one kind of thing in the library (cars, photos). */
+.shelf { margin-top: 10vh; padding-top: 5vh; border-top: 1px solid var(--line); }
+.shelf__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: 18px 40px;
+  margin-bottom: 36px;
+}
+.shelf__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 800;
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+}
+.shelf__title span {
+  margin-left: 0.4em;
+  font-family: var(--font-mono);
+  font-style: normal;
+  font-weight: 500;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dim);
+  vertical-align: middle;
+}
+
+/* Rarity legend: the scale, rarest first. */
+.legend {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+}
+.rarity { display: flex; align-items: center; gap: 7px; color: var(--dim); }
+.rarity b { font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+.mark { display: inline-block; flex: none; fill: currentColor; }
+.rarity--common b, .rarity--common .mark { color: var(--r-common); }
+.rarity--uncommon b, .rarity--uncommon .mark { color: var(--r-uncommon); }
+.rarity--rare b, .rarity--rare .mark { color: var(--r-rare); }
+.rarity--epic b, .rarity--epic .mark { color: var(--r-epic); }
+.rarity--legendary b, .rarity--legendary .mark { color: var(--r-legendary); }
+
+/* ---------- Collector cards ---------- */
+.cards {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 360px));
+  gap: 28px;
+  perspective: 1200px;
+}
+.car { min-width: 0; }
+
+.card {
+  --tier: var(--r-common);
+  --mx: 50%;
+  --my: 50%;
+  --rx: 0deg;
+  --ry: 0deg;
+  position: relative;
+  aspect-ratio: 63 / 88;
+  padding: 10px;
+  border-radius: 14px;
+  background: linear-gradient(150deg, color-mix(in srgb, var(--tier) 90%, white), var(--tier) 45%, color-mix(in srgb, var(--tier) 60%, black));
+  box-shadow: 0 18px 40px -18px rgb(0 0 0 / 0.8);
+  transform: rotateX(var(--rx)) rotateY(var(--ry));
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.card--uncommon { --tier: var(--r-uncommon); }
+.card--rare { --tier: var(--r-rare); }
+.card--epic { --tier: var(--r-epic); }
+.card--legendary { --tier: var(--r-legendary); }
+
+.card__face {
+  position: relative;
+  height: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr) auto auto auto auto auto;
+  gap: 8px;
+  padding: 12px 14px 10px;
+  border-radius: 7px;
+  background: var(--paper);
+  color: var(--ink);
+  overflow: hidden;
+}
+
+.card__top { display: flex; align-items: start; justify-content: space-between; gap: 10px; }
+.card__name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 800;
+  font-size: 1.7rem;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+}
+.card__name small {
+  display: block;
+  margin-bottom: 3px;
+  font-family: var(--font-mono);
+  font-style: normal;
+  font-weight: 600;
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #5c6068;
+}
+.card__power {
+  margin: 0;
+  white-space: nowrap;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 800;
+  font-size: 1.35rem;
+  line-height: 1;
+  color: var(--tartan-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.card__art {
+  display: block;
+  min-height: 0;
+  border: 3px solid color-mix(in srgb, var(--tier) 70%, var(--ink));
+  border-radius: 3px;
+  background: var(--ink);
+  overflow: hidden;
+}
+.card__art img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 72%;
+}
+
+.card__type {
+  margin: 0;
+  padding: 3px 8px;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--tier) 35%, var(--paper));
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.card__stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 0;
+  border-top: 1px solid #d3d4d0;
+  border-bottom: 1px solid #d3d4d0;
+}
+.card__stats div { display: flex; flex-direction: column-reverse; gap: 2px; padding: 6px 4px; min-width: 0; text-align: center; }
+.card__stats div + div { border-left: 1px solid #d3d4d0; }
+.card__stats dt { font-family: var(--font-mono); font-size: 0.56rem; letter-spacing: 0.06em; text-transform: uppercase; color: #5c6068; }
+.card__stats dd {
+  margin: 0;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 800;
+  font-size: 1.15rem;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.card__text { margin: 0; font-size: 0.8rem; line-height: 1.4; color: #2b2e33; }
+.card__text .ref { color: #6b6e74; }
+.card__spotted { margin: 0; font-size: 0.74rem; line-height: 1.3; color: #2b2e33; }
+.card__spotted span { font-family: var(--font-mono); font-size: 0.58rem; letter-spacing: 0.08em; text-transform: uppercase; color: #5c6068; margin-right: 4px; }
+
+.card__foot {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.04em;
+  color: #5c6068;
+}
+.card__rarity {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 6px;
+  border-radius: 2px;
+  background: var(--ink);
+  color: var(--tier);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.card__no { margin-left: auto; font-variant-numeric: tabular-nums; }
+
+/* Holographic sheen on epic and legendary cards: a rainbow foil band and a glare spot, both
+   following the pointer. At rest the foil sits faintly across the card. */
+.card--epic::after,
+.card--legendary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background:
+    radial-gradient(circle at var(--mx) var(--my), rgb(255 255 255 / 0.5), transparent 38%),
+    linear-gradient(115deg, transparent 18%, rgb(255 90 150 / 0.55) 32%, rgb(255 220 90 / 0.55) 42%, rgb(90 255 190 / 0.55) 52%, rgb(90 170 255 / 0.55) 62%, rgb(190 120 255 / 0.5) 70%, transparent 84%);
+  background-size: 100% 100%, 260% 260%;
+  background-position: center, var(--mx) var(--my);
+  mix-blend-mode: overlay;
+  opacity: 0.45;
+  transition: opacity 300ms ease;
+}
+.card.is-tilting::after { opacity: 1; }
+
+.cards-live .car { opacity: 0; }
+
+@media (hover: hover) and (pointer: fine) {
+  .card { transition: transform 500ms var(--ease-out-quint), box-shadow 300ms ease; }
+  .card.is-tilting { transition: box-shadow 300ms ease; box-shadow: 0 28px 60px -20px rgb(0 0 0 / 0.9); }
+  .card__art:hover img { transform: scale(1.03); }
+  .card__art img { transition: transform 400ms var(--ease-out-quint); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card { transform: none; }
+}
+
+.page-library .library { grid-template-columns: repeat(auto-fill, minmax(min(100%, 180px), 1fr)); }

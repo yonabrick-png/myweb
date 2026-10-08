@@ -1,0 +1,76 @@
+{
+  "$comment": "The library page. Cars: one entry per car photo, shown as a collector card. Rarity is worked out at build time from `built` (how many of that exact version were made) using the `rarity` scale below, so it is never hand-picked. Every car fact needs a sourceUrl. Photos go in public/photos/; every photo needs alt text.",
+  "rarity": [
+    {
+      "id": "common",
+      "name": "Common",
+      "maxBuilt": null,
+      "label": "More than 10,000 built"
+    },
+    {
+      "id": "uncommon",
+      "name": "Uncommon",
+      "maxBuilt": 10000,
+      "label": "1,001 to 10,000 built"
+    },
+    {
+      "id": "rare",
+      "name": "Rare",
+      "maxBuilt": 1000,
+      "label": "101 to 1,000 built"
+    },
+    {
+      "id": "epic",
+      "name": "Epic",
+      "maxBuilt": 100,
+      "label": "21 to 100 built"
+    },
+    {
+      "id": "legendary",
+      "name": "Legendary",
+      "maxBuilt": 20,
+      "label": "20 or fewer built"
+    }
+  ],
+  "cars": [
+    {
+      "id": "lamborghini-centenario",
+      "make": "Lamborghini",
+      "model": "Centenario",
+      "version": "Coupé",
+      "year": 2016,
+      "power": "770 CV",
+      "engine": "V12",
+      "built": 20,
+      "builtNote": "20 coupés, plus 20 roadsters",
+      "stats": [
+        {
+          "label": "0–100 km/h",
+          "value": "2.8 s"
+        },
+        {
+          "label": "Top speed",
+          "value": ">350 km/h"
+        },
+        {
+          "label": "Coupés built",
+          "value": "20"
+        }
+      ],
+      "text": "Made in 2016 to mark 100 years since Ferruccio Lamborghini was born. All 40 were sold before its debut at the Geneva Motor Show.",
+      "spotted": "Lamborghini factory, Sant'Agata Bolognese",
+      "photo": {
+        "src": "photos/cars/lamborghini-centenario.jpg",
+        "thumb": "photos/cars/lamborghini-centenario-sm.jpg",
+        "alt": "A black carbon-fibre Lamborghini Centenario with yellow trim, seen head-on in a white exhibition room, with a design sketch of the car on the wall behind it."
+      },
+      "sourceUrl": "https://www.lamborghini.com/en-en/history/centenario",
+      "extraSources": [
+        "https://www.lamborghini.com/en-en/news/lamborghini-centenario-perfect-few"
+      ],
+      "retrievedOn": "2026-10-08"
+    }
+  ],
+  "photos": [],
+  "emptySlots": 6
+}

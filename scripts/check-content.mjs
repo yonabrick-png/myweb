@@ -11,6 +11,7 @@ const { bubbles } = read('bubbles.json');
 const { prs } = read('prs.json');
 const { race, notes } = read('race.json');
 const { projects } = read('projects.json');
+const library = read('library.json');
 const { photography } = read('hobbies.json');
 const errors = [];
 const warnings = [];
@@ -57,7 +58,18 @@ else {
 if (race.placeholder) warnings.push('race: splits and notes are placeholders');
 for (const n of notes) if (!(n.at >= 0 && n.at <= 1)) errors.push(`race note ${n.id}: at must be 0..1`);
 for (const p of projects) if (!/^https?:\/\//.test(p.url)) errors.push(`project ${p.id}: url must be http(s)`);
-photography.photos.forEach((ph, i) => {
+for (const c of library.cars) {
+  const where = `car ${c.id}`;
+  if (!c.sourceUrl) errors.push(`${where}: sourceUrl is empty`);
+  if (!c.retrievedOn) errors.push(`${where}: retrievedOn is empty`);
+  if (!(Number.isInteger(c.built) && c.built > 0)) errors.push(`${where}: built must be a whole number of cars`);
+  if (!c.photo?.src) errors.push(`${where}: photo.src is empty`);
+  if (!c.photo?.alt) errors.push(`${where}: photo.alt is empty; describe what is in the picture`);
+}
+if (photography.teaser && !library.cars.some((c) => c.id === photography.teaser)) {
+  errors.push(`hobbies: teaser "${photography.teaser}" is not a car in library.json`);
+}
+library.photos.forEach((ph, i) => {
   if (!ph.src) errors.push(`photo ${i + 1}: src is empty`);
   if (!ph.alt) errors.push(`photo ${i + 1} (${ph.src}): alt text is empty; describe what is in the picture`);
 });
@@ -67,4 +79,4 @@ if (errors.length) {
   console.error(`Content check failed:\n  ${errors.join('\n  ')}`);
   process.exit(1);
 }
-console.log(`Content check passed (${bubbles.length} bubbles, ${prs.length} PRs, ${race.splits.length} splits, ${projects.length} projects).`);
+console.log(`Content check passed (${bubbles.length} bubbles, ${prs.length} PRs, ${race.splits.length} splits, ${projects.length} projects, ${library.cars.length} cars).`);
